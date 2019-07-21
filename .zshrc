@@ -89,6 +89,7 @@ export HOMEBREW_NO_AUTO_UPDATE="1"
 alias ls='ls --color -F'
 alias la='ls -a'
 alias ll='ls -alG'
+alias l='ls -alG'
 alias vi='vim'
 alias diff='colordiff -u'
 alias grep='grep --color'
@@ -127,4 +128,4 @@ type pyenv-virtualenv-init >/dev/null && eval "$(pyenv virtualenv-init -)"
 type jenv >/dev/null && eval "$(jenv init -)"
 
 # tmux
-[[ -z "$TMUX" && -z "$WINDOW" && ! -z "$PS1" ]] && tmux attach || tmux new
+#[[ -z "$TMUX" && -z "$WINDOW" && ! -z "$PS1" ]] && tmux attach || tmux new
