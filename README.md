@@ -1,4 +1,4 @@
-yakkun/dotfiles
+zawawahoge/dotfiles
 ====
 
 ## Usage
@@ -6,7 +6,7 @@ yakkun/dotfiles
 ### Setup everything
 
 ```console
-git clone git@github.com:yakkun/dotfiles.git
+git clone git@github.com:zawawahoge/dotfiles.git
 cd dotfiles
 make
 ```
