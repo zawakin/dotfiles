@@ -31,6 +31,7 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 
 ### Disable functions
 defaults write com.apple.dashboard mcx-disabled -bool true # Dashboard
