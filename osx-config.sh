@@ -34,7 +34,7 @@ defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
 
 ### Disable functions
 defaults write com.apple.dashboard mcx-disabled -bool true # Dashboard
-defaults write com.apple.dock mcx-expose-disabled -bool true # Mission Control
+defaults write com.apple.dock mcx-expose-disabled -bool false # Mission Control
 
 ### Finder
 defaults write com.apple.finder _FXShowPosixPathInTitle -bool true # Title bar shows full path
