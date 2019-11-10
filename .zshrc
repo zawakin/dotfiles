@@ -129,3 +129,5 @@ type jenv >/dev/null && eval "$(jenv init -)"
 
 # tmux
 #[[ -z "$TMUX" && -z "$WINDOW" && ! -z "$PS1" ]] && tmux attach || tmux new
+
+alias code=code-insiders
