@@ -95,6 +95,10 @@ alias diff='colordiff -u'
 alias grep='grep --color'
 alias less='less -NR'
 alias dc='docker-compose'
+alias gf='git fetch'
+alias gco='git checkout'
+alias gs='git status'
+alias gd='git diff'
 
 # ===== Functions =====
 # Ctrl-g: Cd-to-ghq-repository
@@ -129,3 +133,14 @@ type jenv >/dev/null && eval "$(jenv init -)"
 
 # tmux
 #[[ -z "$TMUX" && -z "$WINDOW" && ! -z "$PS1" ]] && tmux attach || tmux new
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/yuki_miyake/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/yuki_miyake/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/yuki_miyake/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/yuki_miyake/google-cloud-sdk/completion.zsh.inc'; fi
+
+export GOENV_ROOT=$HOME/.goenv
+export PATH=$GOENV_ROOT/bin:$PATH
+eval "$(goenv init -)"
+
