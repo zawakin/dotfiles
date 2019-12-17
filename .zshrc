@@ -97,8 +97,10 @@ alias less='less -NR'
 alias dc='docker-compose'
 alias gf='git fetch'
 alias gco='git checkout'
-alias gs='git status'
+alias gs='git status -sb'
 alias gd='git diff'
+alias gw='git switch'
+alias gp='git pull'
 
 # ===== Functions =====
 # Ctrl-g: Cd-to-ghq-repository
