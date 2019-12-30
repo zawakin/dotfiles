@@ -58,7 +58,6 @@ brew "libnfc"
 brew "libyaml"
 brew "mas"
 brew "maven"
-brew "mysql@5.7", restart_service: true, link: true
 brew "nmap"
 brew "node"
 brew "openssl"
