@@ -57,4 +57,5 @@
 [ghq]
   root = ~/.ghq
   root = ~/go/src
+  root = ~/go/1.13.5/src
 

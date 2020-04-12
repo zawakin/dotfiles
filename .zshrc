@@ -80,7 +80,6 @@ zplug load
 # ===== /zplug =====
 
 # Misc config
-export GOPATH=$HOME/go
 export PATH=/usr/local/opt/coreutils/libexec/gnubin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/grep/libexec/gnubin:/usr/local/opt/findutils/libexec/gnubin:$PATH
 export PATH=$PATH:/usr/local/sbin:$HOME/.nodebrew/current/bin:$GOPATH/bin
 export HOMEBREW_NO_AUTO_UPDATE="1"
@@ -101,6 +100,7 @@ alias gs='git status -sb'
 alias gd='git diff'
 alias gw='git switch'
 alias gp='git pull'
+alias code=code-insiders
 
 # ===== Functions =====
 # Ctrl-g: Cd-to-ghq-repository
@@ -142,8 +142,19 @@ if [ -f '/Users/yuki_miyake/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/yuk
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/yuki_miyake/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/yuki_miyake/google-cloud-sdk/completion.zsh.inc'; fi
 
+# go env setup
 export GOENV_ROOT=$HOME/.goenv
 export PATH=$GOENV_ROOT/bin:$PATH
 eval "$(goenv init -)"
 
-alias code=code-insiders
+export PATH=$PATH:$HOME/flutter/bin
+
+export PATH="/usr/local/opt/mysql-client/bin:$PATH"
+
+alias chrome="open -a 'Google Chrome'"
+
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export PATH="$ANDROID_HOME/bin:$PATH"
+
+export PATH="$HOME/.pub-cache/bin:$PATH"
+
