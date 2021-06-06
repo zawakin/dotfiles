@@ -136,25 +136,10 @@ type jenv >/dev/null && eval "$(jenv init -)"
 # tmux
 #[[ -z "$TMUX" && -z "$WINDOW" && ! -z "$PS1" ]] && tmux attach || tmux new
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/yuki_miyake/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/yuki_miyake/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/yuki_miyake/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/yuki_miyake/google-cloud-sdk/completion.zsh.inc'; fi
-
-# go env setup
-export GOENV_ROOT=$HOME/.goenv
-export PATH=$GOENV_ROOT/bin:$PATH
-eval "$(goenv init -)"
-
-export PATH=$PATH:$HOME/flutter/bin
-
-export PATH="/usr/local/opt/mysql-client/bin:$PATH"
-
 alias chrome="open -a 'Google Chrome'"
 
-export ANDROID_HOME="$HOME/Library/Android/sdk"
-export PATH="$ANDROID_HOME/bin:$PATH"
+export GOPATH=$HOME/go
+export GOROOT="$(brew --prefix golang)/libexec"
+export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
-export PATH="$HOME/.pub-cache/bin:$PATH"
-
+# export PATH=$PATH:$HOME/google-cloud-sdk/bin
