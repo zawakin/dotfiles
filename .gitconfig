@@ -1,6 +1,6 @@
 [user]
-  name = zawawahoge
-  email = zawawabis@gmail.com
+	name = zawawahoge
+	email = zawawahoge@gmail.com
 
 [color]
   ui = auto
@@ -56,4 +56,3 @@
 
 [ghq]
   root = ~/go/src
-
