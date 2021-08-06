@@ -1,7 +1,7 @@
 ## -*- mode: makefile-gmake; -*-
 
 .PHONY: all
-all: osx-config git ssh vim zsh homebrew
+all: osx-config git ssh vim zsh fish homebrew
 
 .PHONY: help
 help:
@@ -30,6 +30,14 @@ vim: ## Setup Vim configuration
 .PHONY: zsh
 zsh: ## Setup Zsh configuration
 	ln -vsf ${PWD}/.zshrc ${HOME}
+
+.PHONY: fish
+fish: ## Setup Fish configuration
+	mkdir -p ${HOME}/.config/fish
+	mkdir -p ${HOME}/.config/fish/functions
+	ln -vsf ${PWD}/.config/fish/config.fish ${HOME}/.config/fish/config.fish
+	ln -vsf ${PWD}/.config/fish/fish_variables ${HOME}/.config/fish/fish_variables
+	ln -vsf ${PWD}/.config/fish/functions/fish_prompt.fish ${HOME}/.config/fish/functions/fish_prompt.fish
 
 .PHONY: homebrew
 homebrew: ## Setup Homebrew configuration
