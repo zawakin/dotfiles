@@ -23,3 +23,15 @@ set -x PATH $GOPATH/bin $PATH
 source /usr/local/opt/asdf/asdf.fish
 
 export LSCOLORS=gxfxcxdxbxegedabagacad
+
+# -- functions
+function cd_fzy_ghqlist
+    set -l ghq_root (ghq root)
+    set -l repo (ghq list -p | sed 's;'$ghq_root'/;;g' | fzy)
+    if [ -n "$repo" ]
+        cd $ghq_root'/'$repo
+    end
+    commandline -f repaint
+end
+
+bind \cG cd_fzy_ghqlist
