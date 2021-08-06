@@ -61,11 +61,6 @@ function cd-fzy-ghqlist() {
 zle -N cd-fzy-ghqlist
 bindkey '^G' cd-fzy-ghqlist
 
-# command fcd (to cd current open folder on Finder)
-function fcd() {
-  cd "`osascript -l JavaScript -e \"decodeURIComponent(Application('Finder').windows[0].target().url().replace('file://', '')).replace(/\\"/g, '\\\"');\"`" && pwd
-}
-
 alias chrome="open -a 'Google Chrome'"
 
 export GOPATH=$HOME/go
