@@ -26,59 +26,6 @@ setopt hist_no_store      # history コマンドをヒストリにいれない
 setopt hist_reduce_blanks # 履歴から冗長な空白を除く
 setopt hist_no_functions  # 関数定義をヒストリに入れない
 
-# ===== zplug =====
-# Install and load
-if [[ ! -f ~/.zplug/init.zsh ]]; then
-  printf "[WARN] zplug is needed by .zshrc but seems NOT installed, install now? [y/N]: "
-  if read -q; then
-    echo
-    curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
-  fi
-fi
-source ~/.zplug/init.zsh
-zplug "zplug/zplug", hook-build:"zplug --self-manage"
-# Theme
-zplug "mafredri/zsh-async"
-zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
-# Vanilli.sh (lightweight start point of shell configuration)
-zplug "yous/vanilli.sh"
-# ehnacd
-zplug "b4b4r07/enhancd", use:init.sh
-export ENHANCD_FILTER=fzy:fzf:peco
-export ENHANCD_DISABLE_DOT=1
-#export ENHANCD_DISABLE_HYPHEN=1
-export ENHANCD_DISABLE_HOME=1
-# z.sh
-zplug "rupa/z", use:"*.sh"
-# Syntax highlighter
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
-# History substring search
-zplug "zsh-users/zsh-history-substring-search", defer:3
-if zplug check "zsh-users/zsh-history-substring-search"; then
-  bindkey -M emacs '^P' history-substring-search-up
-  bindkey -M emacs '^N' history-substring-search-down
-fi
-# Suggestions like FISH shell
-zplug "zsh-users/zsh-autosuggestions"
-# Auto completions
-zplug "zsh-users/zsh-completions"
-# Use fzy for zsh
-zplug "aperezdc/zsh-fzy"
-bindkey '^R' fzy-history-widget
-# Load .env file automatically
-zplug "plugins/dotenv", from:oh-my-zsh
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-  printf "[zplug:NOTICE] some plugins are seems NOT installed, install now? [y/N]: "
-  if read -q; then
-    echo
-    zplug install
-  fi
-fi
-# Load all
-zplug load
-# ===== /zplug =====
-
 # Misc config
 export PATH=/usr/local/opt/coreutils/libexec/gnubin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/opt/grep/libexec/gnubin:/usr/local/opt/findutils/libexec/gnubin:$PATH
 export PATH=$PATH:/usr/local/sbin:$HOME/.nodebrew/current/bin:$GOPATH/bin
@@ -100,7 +47,6 @@ alias gs='git status -sb'
 alias gd='git diff'
 alias gw='git switch'
 alias gp='git pull'
-alias code=code-insiders
 
 # ===== Functions =====
 # Ctrl-g: Cd-to-ghq-repository
@@ -119,22 +65,6 @@ bindkey '^G' cd-fzy-ghqlist
 function fcd() {
   cd "`osascript -l JavaScript -e \"decodeURIComponent(Application('Finder').windows[0].target().url().replace('file://', '')).replace(/\\"/g, '\\\"');\"`" && pwd
 }
-
-# hub
-type hub >/dev/null && eval "$(hub alias -s)"
-# direnv
-type direnv >/dev/null && eval "$(direnv hook zsh)"
-# rbenv
-type rbenv >/dev/null && eval "$(rbenv init - zsh)"
-# pyenv
-type pyenv >/dev/null && eval "$(pyenv init -)"
-# pyenv-virtualenv
-type pyenv-virtualenv-init >/dev/null && eval "$(pyenv virtualenv-init -)"
-# jenv
-type jenv >/dev/null && eval "$(jenv init -)"
-
-# tmux
-#[[ -z "$TMUX" && -z "$WINDOW" && ! -z "$PS1" ]] && tmux attach || tmux new
 
 alias chrome="open -a 'Google Chrome'"
 

@@ -1,10 +1,8 @@
 [user]
-	name = zawawahoge
-	email = zawawahoge@gmail.com
+  name = zawawahoge
+  email = zawawahoge@gmail.com
 
-[color]
-  ui = auto
-
+[color] ui = auto
 [alias]
   co = checkout
   ci = commit
@@ -52,7 +50,7 @@
   rebase = true
 
 [url "ssh://git@github.com/"]
-	insteadOf = https://github.com/
+  # insteadOf = https://github.com/
 
 [ghq]
   root = ~/go/src
