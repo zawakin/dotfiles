@@ -23,6 +23,7 @@
   editor = vim
   whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
   commentchar = ";"
+	quotepath = false
 
 [push]
   default = current
