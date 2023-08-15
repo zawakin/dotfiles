@@ -6,7 +6,7 @@ zawawahoge/dotfiles
 ### Setup everything
 
 ```console
-git clone git@github.com:zawawahoge/dotfiles.git
+git clone git@github.com:zawakin/dotfiles.git
 cd dotfiles
 make
 ```
