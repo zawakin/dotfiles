@@ -20,7 +20,11 @@ alias gp='git pull'
 set -x GOPATH $HOME/go $GOPATH
 set -x PATH $GOPATH/bin $PATH
 
-source /usr/local/opt/asdf/asdf.fish
+# for go wasm
+# set -x PATH (go env GOROOT)/misc/wasm $PATH
+# set -x PATH $HOME/.cargo/bin $PATH
+
+source /usr/local/opt/asdf/libexec/asdf.fish
 
 export LSCOLORS=gxfxcxdxbxegedabagacad
 
