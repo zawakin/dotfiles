@@ -27,10 +27,6 @@ vim: ## Setup Vim configuration
 	ln -vsf ${PWD}/.vimrc ${HOME}
 	curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-.PHONY: zsh
-zsh: ## Setup Zsh configuration
-	ln -vsf ${PWD}/.zshrc ${HOME}
-
 .PHONY: fish
 fish: ## Setup Fish configuration
 	mkdir -p ${HOME}/.config/fish
