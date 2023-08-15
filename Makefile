@@ -16,6 +16,7 @@ git: ## Setup Git configuration
 	ln -vsf ${PWD}/.gitconfig ${HOME}
 	mkdir -p ${HOME}/.config/git
 	ln -vsf ${PWD}/.config/git/ignore ${HOME}/.config/git/ignore
+	ln -vsf ${PWD}/.config/git/.commit_template ${HOME}/.config/git/.commit_template
 
 .PHONY: ssh
 ssh: ## Setup ssh configuration

@@ -37,6 +37,7 @@
 
 [commit]
   verbose = true
+	template = ~/.config/git/.commit_template
 
 [branch "master"]
   rebase = true
