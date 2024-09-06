@@ -1,7 +1,7 @@
 ## -*- mode: makefile-gmake; -*-
 
 .PHONY: all
-all: osx-config git ssh vim zsh fish homebrew
+all: osx-config git ssh vim fish homebrew
 
 .PHONY: help
 help:
@@ -14,6 +14,7 @@ osx-config: ## Setup global system (OS) configurations
 .PHONY: git
 git: ## Setup Git configuration
 	ln -vsf ${PWD}/.gitconfig ${HOME}
+	ln -vsf ${PWD}/.gitconfig.kw ${HOME}
 	mkdir -p ${HOME}/.config/git
 	ln -vsf ${PWD}/.config/git/ignore ${HOME}/.config/git/ignore
 	ln -vsf ${PWD}/.config/git/.commit_template ${HOME}/.config/git/.commit_template
