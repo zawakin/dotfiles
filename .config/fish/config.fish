@@ -27,8 +27,6 @@ alias gr='cd (git rev-parse --show-toplevel)'
 set -x GOPATH $HOME/go $GOPATH
 set -x PATH $GOPATH/bin $PATH
 
-set -Ua fish_user_paths "$HOME/.rye/shims"
-
 # for voicevox
 set -x DYLD_LIBRARY_PATH $HOME/.local/models/voicevox_core $DYLD_LIBRARY_PATH
 
@@ -52,11 +50,13 @@ function cd_fzy_ghqlist
 end
 
 function cd_fzy_projects
-    set -l projects_dir $HOME/projects
-    set -l selected_dir (find $projects_dir -maxdepth 1 -type d | fzy)
+    set -l ghq_root (ghq root)
+    set -l local_experimental 'github.com/zawakin/experimental'
+    set -l projects_dir $ghq_root/$local_experimental
+    set -l selected_dir (find $projects_dir -mindepth 1 -maxdepth 3 -type d | sed "s|$projects_dir/||" | fzy)
     # set -l selected_dir (find $projects_dir -maxdepth 1 -type d | sed "s|$projects_dir/||" | fzy)
     if [ -n "$selected_dir" ]
-        cd $selected_dir
+        cd $projects_dir'/'$selected_dir
     end
     commandline -f repaint
 end
