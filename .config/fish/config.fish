@@ -41,22 +41,20 @@ export LSCOLORS=gxfxcxdxbxegedabagacad
 
 # -- functions
 function cd_fzy_ghqlist
-    set -l ghq_root (ghq root)
-    set -l repo (ghq list -p | sed 's;'$ghq_root'/;;g' | fzy)
-    if [ -n "$repo" ]
-        cd $ghq_root'/'$repo
+    set -l selected_repo (ghq list | fzy -l 15)
+    if [ -n "$selected_repo" ]
+        cd (ghq root)/$selected_repo
     end
     commandline -f repaint
 end
 
 function cd_fzy_projects
-    set -l ghq_root (ghq root)
-    set -l local_experimental 'github.com/zawakin/experimental'
-    set -l projects_dir $ghq_root/$local_experimental
-    set -l selected_dir (find $projects_dir -mindepth 1 -maxdepth 3 -type d | sed "s|$projects_dir/||" | fzy)
-    # set -l selected_dir (find $projects_dir -maxdepth 1 -type d | sed "s|$projects_dir/||" | fzy)
+    # Set projects_dir directly to ~/experimental
+    set -l projects_dir $HOME/experimental/experimental
+
+    set -l selected_dir (find $projects_dir -mindepth 1 -maxdepth 3 -type d | sed "s|$projects_dir/||" | fzy -l 15)
     if [ -n "$selected_dir" ]
-        cd $projects_dir'/'$selected_dir
+        cd $projects_dir/$selected_dir
     end
     commandline -f repaint
 end
@@ -72,7 +70,7 @@ function git-switch-enhanced
     end
 
     # fzyを使ってブランチを選択し、出力からブランチ名だけを抽出
-    set -l selected_branch (echo -e "$branch_info" | fzy | string match -r '^[^:]*')
+    set -l selected_branch (echo -e "$branch_info" | fzy -l 15 | string match -r '^[^:]*')
 
     # 選択したブランチに切り替え
     if test -n "$selected_branch"
@@ -82,6 +80,12 @@ function git-switch-enhanced
         echo "Branch switch cancelled."
     end
     commandline -f repaint
+end
+
+function pvim
+    vim -nR \
+        -c "set nowrap" \
+        $argv
 end
 
 bind \cG cd_fzy_ghqlist
