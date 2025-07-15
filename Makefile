@@ -1,44 +1,85 @@
 ## -*- mode: makefile-gmake; -*-
 
+# Variables
+DOTFILES_DIR := $(shell pwd)
+HOME_DIR := $(HOME)
+STOW_TARGET := $(HOME_DIR)
+
 .PHONY: all
-all: osx-config git ssh vim fish homebrew
+all: osx-config stow-all homebrew
 
 .PHONY: help
-help:
+help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: osx-config
 osx-config: ## Setup global system (OS) configurations
-	./osx-config.sh
+	@echo "Setting up macOS configuration..."
+	@./osx-config.sh
 
-.PHONY: git
-git: ## Setup Git configuration
-	ln -vsf ${PWD}/.gitconfig ${HOME}
-	ln -vsf ${PWD}/.gitconfig.kw ${HOME}
-	mkdir -p ${HOME}/.config/git
-	ln -vsf ${PWD}/.config/git/ignore ${HOME}/.config/git/ignore
-	ln -vsf ${PWD}/.config/git/.commit_template ${HOME}/.config/git/.commit_template
+.PHONY: stow-all
+stow-all: ## Setup all configurations using stow
+	@echo "Setting up all configurations with stow..."
+	@stow -v -t $(STOW_TARGET) git
+	@stow -v -t $(STOW_TARGET) ssh
+	@stow -v -t $(STOW_TARGET) vim
+	@stow -v -t $(STOW_TARGET) fish
+	@stow -v -t $(STOW_TARGET) homebrew
 
-.PHONY: ssh
-ssh: ## Setup ssh configuration
-	ln -vsf ${PWD}/.ssh/conf.d ${HOME}/.ssh/
-	ln -vsf ${PWD}/.ssh/config ${HOME}/.ssh/
+.PHONY: stow-git
+stow-git: ## Setup Git configuration
+	@echo "Setting up Git configuration..."
+	@stow -v -t $(STOW_TARGET) git
 
-.PHONY: vim
-vim: ## Setup Vim configuration
-	ln -vsf ${PWD}/.vimrc ${HOME}
-	curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+.PHONY: stow-ssh
+stow-ssh: ## Setup SSH configuration
+	@echo "Setting up SSH configuration..."
+	@stow -v -t $(STOW_TARGET) ssh
 
-.PHONY: fish
-fish: ## Setup Fish configuration
-	mkdir -p ${HOME}/.config/fish
-	mkdir -p ${HOME}/.config/fish/functions
-	ln -vsf ${PWD}/.config/fish/config.fish ${HOME}/.config/fish/config.fish
-	ln -vsf ${PWD}/.config/fish/fish_variables ${HOME}/.config/fish/fish_variables
-	ln -vsf ${PWD}/.config/fish/functions/fish_prompt.fish ${HOME}/.config/fish/functions/fish_prompt.fish
+.PHONY: stow-vim
+stow-vim: ## Setup Vim configuration
+	@echo "Setting up Vim configuration..."
+	@stow -v -t $(STOW_TARGET) vim
+ifeq ($(shell command -v vim 2>/dev/null),)
+	@echo "Vim not found, skipping vim-plug installation"
+else
+	@curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+
+.PHONY: stow-fish
+stow-fish: ## Setup Fish configuration
+	@echo "Setting up Fish configuration..."
+	@stow -v -t $(STOW_TARGET) fish
+
+.PHONY: stow-homebrew
+stow-homebrew: ## Setup Homebrew configuration
+	@echo "Setting up Homebrew configuration..."
+	@stow -v -t $(STOW_TARGET) homebrew
+
+.PHONY: unstow-all
+unstow-all: ## Remove all stow configurations
+	@echo "Removing all stow configurations..."
+	@stow -v -t $(STOW_TARGET) -D git ssh vim fish homebrew 2>/dev/null || true
+
+.PHONY: restow-all
+restow-all: ## Restow all configurations (useful after updates)
+	@echo "Restowing all configurations..."
+	@stow -v -t $(STOW_TARGET) -R git ssh vim fish homebrew
 
 .PHONY: homebrew
-homebrew: ## Setup Homebrew configuration
-	ln -vsf ${PWD}/Brewfile ${HOME}
-	brew bundle
-	brew autoupdate --start --upgrade --cleanup --enable-notification
+homebrew: stow-homebrew ## Install Homebrew packages
+	@echo "Installing Homebrew packages..."
+	@brew bundle
+	@brew autoupdate --start --upgrade --cleanup --enable-notification
+
+.PHONY: clean
+clean: ## Clean up broken symlinks
+	@echo "Cleaning up broken symlinks..."
+	@find $(HOME_DIR) -type l -exec test ! -e {} \; -delete 2>/dev/null || true
+
+# Legacy targets for backward compatibility
+.PHONY: git ssh vim fish
+git: stow-git
+ssh: stow-ssh
+vim: stow-vim
+fish: stow-fish
