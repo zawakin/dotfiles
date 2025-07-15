@@ -34,8 +34,7 @@ set -x DYLD_LIBRARY_PATH $HOME/.local/models/voicevox_core $DYLD_LIBRARY_PATH
 # set -x PATH (go env GOROOT)/misc/wasm $PATH
 # set -x PATH $HOME/.cargo/bin $PATH
 
-# source /usr/local/opt/asdf/libexec/asdf.fish
-source /opt/homebrew/opt/asdf/libexec/asdf.fish
+mise activate fish | source
 
 export LSCOLORS=gxfxcxdxbxegedabagacad
 
