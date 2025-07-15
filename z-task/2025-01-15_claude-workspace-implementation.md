@@ -63,3 +63,8 @@ Fish shellにClaude Codeで複数リポジトリを効率的に扱うワーク�
 - `.config/fish/config.fish` - `claude_workspace` 関数
 - `Brewfile` - fzf依存関係追加
 - `CLAUDE.md` - ドキュメント更新
+
+## 構成管理の改善
+- fish パッケージの階層構造を修正
+- `fish/.config/` → `fish/.config/fish/` に変更
+- GNU Stowによる適切なシンボリックリンク配置を実現
