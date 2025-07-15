@@ -1,3 +1,4 @@
+brew "fzf"
 brew "fzy"
 brew "ghq"
 brew "git"
