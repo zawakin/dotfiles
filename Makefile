@@ -77,6 +77,12 @@ clean: ## Clean up broken symlinks
 	@echo "Cleaning up broken symlinks..."
 	@find $(HOME_DIR) -type l -exec test ! -e {} \; -delete 2>/dev/null || true
 
+.PHONY: claude-workspace-cleanup
+claude-workspace-cleanup: ## Clean up Claude workspace temporary files
+	@echo "Cleaning up Claude workspace temporary files..."
+	@find $(HOME_DIR) -name ".claude_workspace*" -type f -delete 2>/dev/null || true
+	@find $(HOME_DIR) -name "claude_workspace*" -type f -delete 2>/dev/null || true
+
 # Legacy targets for backward compatibility
 .PHONY: git ssh vim fish
 git: stow-git
