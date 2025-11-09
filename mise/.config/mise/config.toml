@@ -1,0 +1,11 @@
+[settings]
+experimental = true
+idiomatic_version_file_enable_tools = ["python"]
+
+[tools]
+cargo = "latest"
+claude = "2.0.28"
+neovim = "latest"
+node = "24"
+rust = "stable"
+yq = "latest"

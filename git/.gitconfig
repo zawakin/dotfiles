@@ -5,6 +5,9 @@
 [includeIf "gitdir:~/go/src/github.com/knowledge-work/"]
   path = ~/.gitconfig.kw
 
+[includeIf "gitdir:~/go/src/github.com/trybase77/"]
+  path = ~/.gitconfig.trybase77
+
 [color] ui = auto
 [alias]
   co = checkout
@@ -45,8 +48,8 @@
 [branch "master"]
   rebase = true
 
-# [url "ssh://git@github.com/"]
-  # insteadOf = https://github.com/
+[url "ssh://git@github.com/"]
+  insteadOf = https://github.com/
 
 [ghq]
   root = ~/go/src

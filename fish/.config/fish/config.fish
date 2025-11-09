@@ -374,3 +374,33 @@ set -x ASDF_GOLANG_MOD_VERSION_ENABLED true
 # uv
 fish_add_path "$HOME/.local/bin"
 
+# GitHub CLI profile switching
+function use-gh-zawakin
+    set -gx GH_CONFIG_DIR ~/.config/gh/zawakin
+    echo "Switched gh to zawakin (for zawakin / knowledge-work)"
+end
+
+function use-gh-trybase77
+    set -gx GH_CONFIG_DIR ~/.config/gh/trybase77
+    echo "Switched gh to trybase77"
+end
+
+# Auto-switch gh profile based on current directory
+function __auto_gh_profile --on-variable PWD
+    set -l current_dir (pwd)
+
+    if string match -q "*/github.com/trybase77/*" -- $current_dir
+        set -gx GH_CONFIG_DIR ~/.config/gh/trybase77
+    else if string match -q "*/github.com/zawakin/*" -- $current_dir
+        set -gx GH_CONFIG_DIR ~/.config/gh/zawakin
+    else if string match -q "*/github.com/knowledge-work/*" -- $current_dir
+        set -gx GH_CONFIG_DIR ~/.config/gh/zawakin
+    else
+        # Default to zawakin profile
+        set -gx GH_CONFIG_DIR ~/.config/gh/zawakin
+    end
+end
+
+# Initialize gh profile on shell startup
+__auto_gh_profile
+
