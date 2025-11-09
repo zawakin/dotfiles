@@ -179,7 +179,7 @@ function claude_workspace
                 echo "Current repository status:"
                 set -l current_branch (git -C "$src_path" rev-parse --abbrev-ref HEAD)
                 echo "  Branch: $current_branch"
-                
+
                 set -l status_output (git -C "$src_path" status --porcelain)
                 if test -z "$status_output"
                     echo "  Working tree: Clean"
@@ -219,14 +219,14 @@ end
 function claude_workspace_cleanup
     # ワークスペースディレクトリ内のディレクトリを列挙
     set -l ws_base "$HOME/ws"
-    
+
     if not test -d "$ws_base"
         echo "No workspace directory found at $ws_base"
         return
     end
 
     set -l ws_dirs (find "$ws_base" -mindepth 1 -maxdepth 1 -type d | sort)
-    
+
     if test (count $ws_dirs) -eq 0
         echo "No workspaces found"
         return
@@ -234,25 +234,25 @@ function claude_workspace_cleanup
 
     # fzyで削除対象のワークスペースを選択
     set -l selected_ws (printf "%s\n" $ws_dirs | sed "s|$ws_base/||" | fzy -l 15)
-    
+
     if test -z "$selected_ws"
         echo "No workspace selected"
         return
     end
 
     set -l ws_dir "$ws_base/$selected_ws"
-    
+
     echo "Workspace: $selected_ws"
     echo "Path: $ws_dir"
     echo ""
-    
+
     # 各リポジトリのgit statusを表示
     echo "=== Git Status for each repository ==="
     for dir in "$ws_dir"/*
         if test -d "$dir"
             set -l repo_name (basename "$dir")
             echo "--- $repo_name ---"
-            
+
             # symlinkかworktreeかを判定
             if test -L "$dir"
                 echo "  Type: Symlink to existing repository"
@@ -261,12 +261,12 @@ function claude_workspace_cleanup
             else
                 echo "  Type: Git worktree"
             end
-            
+
             if test -f "$dir/.git" -o -d "$dir/.git"
                 # 現在のブランチを取得
                 set -l current_branch (git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null)
                 echo "  Branch: $current_branch"
-                
+
                 # ベースブランチを判定
                 set -l base_branch
                 if git -C "$dir" show-ref --verify --quiet refs/remotes/origin/main
@@ -276,11 +276,11 @@ function claude_workspace_cleanup
                 else
                     set base_branch ""
                 end
-                
+
                 # ベースブランチからの差分を表示
                 if test -n "$base_branch"
                     echo "  Base: $base_branch"
-                    
+
                     # ahead/behind情報を取得
                     set -l ahead_behind (git -C "$dir" rev-list --left-right --count "$base_branch"..."$current_branch" 2>/dev/null | string split \t)
                     if test (count $ahead_behind) -eq 2
@@ -301,7 +301,7 @@ function claude_workspace_cleanup
                 else
                     echo "  No origin/main or origin/master found"
                 end
-                
+
                 # 作業ディレクトリの状態を確認
                 set -l status_output (git -C "$dir" status --porcelain 2>/dev/null)
                 if test -z "$status_output"
@@ -320,7 +320,7 @@ function claude_workspace_cleanup
             echo ""
         end
     end
-    
+
     echo "Are you sure you want to delete this workspace? (y/N)"
     read -n 1 confirm
     echo
@@ -353,7 +353,7 @@ function claude_workspace_cleanup
     # ワークスペースディレクトリを削除
     echo "Removing workspace directory: $ws_dir"
     rm -rf "$ws_dir"
-    
+
     echo "Workspace $selected_ws has been deleted"
 end
 
@@ -389,18 +389,134 @@ end
 function __auto_gh_profile --on-variable PWD
     set -l current_dir (pwd)
 
-    if string match -q "*/github.com/trybase77/*" -- $current_dir
+    if string match -q "*/go/src/github.com/trybase77/*" -- $current_dir
         set -gx GH_CONFIG_DIR ~/.config/gh/trybase77
-    else if string match -q "*/github.com/zawakin/*" -- $current_dir
+
+        # Auto-fix HTTPS remote URLs to SSH for trybase77
+        if test -d .git
+            set -l origin_url (git config --get remote.origin.url 2>/dev/null)
+            if test -n "$origin_url"
+                # Convert HTTPS to SSH with trybase77 host
+                if string match -q "https://github.com/trybase77/*" -- $origin_url
+                    set -l new_url (string replace "https://github.com/" "git@github.com-trybase77:" -- $origin_url)
+                    git remote set-url origin $new_url 2>/dev/null
+                    and echo "(auto) Fixed origin → $new_url"
+                else if string match -q "git@github.com:trybase77/*" -- $origin_url
+                    # Convert standard SSH to trybase77-specific host
+                    set -l new_url (string replace "git@github.com:" "git@github.com-trybase77:" -- $origin_url)
+                    git remote set-url origin $new_url 2>/dev/null
+                    and echo "(auto) Fixed origin → $new_url"
+                end
+            end
+        end
+    else if string match -q "*/go/src/github.com/zawakin/*" -- $current_dir
         set -gx GH_CONFIG_DIR ~/.config/gh/zawakin
-    else if string match -q "*/github.com/knowledge-work/*" -- $current_dir
+
+        # Auto-fix HTTPS remote URLs to SSH for zawakin
+        if test -d .git
+            set -l origin_url (git config --get remote.origin.url 2>/dev/null)
+            if test -n "$origin_url"
+                if string match -q "https://github.com/zawakin/*" -- $origin_url
+                    set -l new_url (string replace "https://github.com/" "git@github.com:" -- $origin_url)
+                    git remote set-url origin $new_url 2>/dev/null
+                    and echo "(auto) Fixed origin → $new_url"
+                end
+            end
+        end
+    else if string match -q "*/go/src/github.com/knowledge-work/*" -- $current_dir
         set -gx GH_CONFIG_DIR ~/.config/gh/zawakin
+
+        # Auto-fix HTTPS remote URLs to SSH for knowledge-work
+        if test -d .git
+            set -l origin_url (git config --get remote.origin.url 2>/dev/null)
+            if test -n "$origin_url"
+                if string match -q "https://github.com/knowledge-work/*" -- $origin_url
+                    set -l new_url (string replace "https://github.com/" "git@github.com:" -- $origin_url)
+                    git remote set-url origin $new_url 2>/dev/null
+                    and echo "(auto) Fixed origin → $new_url"
+                end
+            end
+        end
     else
         # Default to zawakin profile
         set -gx GH_CONFIG_DIR ~/.config/gh/zawakin
     end
 end
 
+
 # Initialize gh profile on shell startup
 __auto_gh_profile
+
+# Robust ghq get wrapper for multi-account setup
+function ghqget
+    # Set GHQ_ROOT if not already set
+    set -q GHQ_ROOT; or set -l GHQ_ROOT ~/go/src
+
+    if test (count $argv) -eq 0
+        echo "Usage: ghqget <repo>..."
+        echo "Examples:"
+        echo "  ghqget trybase77/repo"
+        echo "  ghqget github.com/trybase77/repo"
+        echo "  ghqget https://github.com/trybase77/repo"
+        echo "  ghqget git@github.com:zawakin/repo.git"
+        return 1
+    end
+
+    for repo_input in $argv
+        set -l repo $repo_input
+        set -l owner ""
+        set -l name ""
+        set -l ssh_host ""
+
+        # Parse URL format
+        if string match -qr '^https://github\.com/([^/]+)/(.+?)(?:\.git)?$' -- $repo
+            set matches (string match -r '^https://github\.com/([^/]+)/(.+?)(?:\.git)?$' -- $repo)
+            set owner $matches[2]
+            set name $matches[3]
+        else if string match -qr '^git@github\.com[:-]([^/]+)/(.+?)(?:\.git)?$' -- $repo
+            set matches (string match -r '^git@github\.com[:-]([^/]+)/(.+?)(?:\.git)?$' -- $repo)
+            set owner $matches[2]
+            set name $matches[3]
+        else if string match -qr '^(?:github\.com/)?([^/]+)/(.+?)(?:\.git)?$' -- $repo
+            # Simple format: owner/repo or github.com/owner/repo
+            set matches (string match -r '^(?:github\.com/)?([^/]+)/(.+?)(?:\.git)?$' -- $repo)
+            set owner $matches[2]
+            set name $matches[3]
+        else
+            echo "Error: Cannot parse repository: $repo_input"
+            continue
+        end
+
+        # Determine SSH host and clone URL
+        if test "$owner" = "trybase77"
+            set ssh_host "github.com-trybase77"
+            echo "Cloning $owner/$name with trybase77 account..."
+        else
+            set ssh_host "github.com"
+            echo "Cloning $owner/$name with zawakin account..."
+        end
+
+        # Construct target directory
+        set -l target_dir "$GHQ_ROOT/github.com/$owner/$name"
+
+        # Check if already exists
+        if test -d "$target_dir"
+            echo "Already exists: $target_dir"
+            continue
+        end
+
+        # Create parent directory
+        mkdir -p (dirname "$target_dir")
+
+        # Clone repository
+        set -l clone_url "git@$ssh_host:$owner/$name.git"
+        if git clone "$clone_url" "$target_dir"
+            echo "Successfully cloned to: $target_dir"
+        else
+            echo "Error: Failed to clone $clone_url"
+        end
+    end
+end
+
+alias gg='ghqget'
 

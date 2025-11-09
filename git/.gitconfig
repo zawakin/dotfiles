@@ -43,13 +43,19 @@
 
 [commit]
   verbose = true
-	template = ~/.config/git/.commit_template
+  template = ~/.config/git/.commit_template
 
 [branch "master"]
   rebase = true
 
-[url "ssh://git@github.com/"]
+[url "git@github.com:"]
   insteadOf = https://github.com/
+
+[url "ssh://git@github.com-trybase77/"]
+  insteadOf = ssh://git@github.com/trybase77/
+  insteadOf = git@github.com:trybase77/
+  insteadOf = https://github.com/trybase77/
 
 [ghq]
   root = ~/go/src
+	protocol = ssh
