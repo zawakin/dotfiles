@@ -380,63 +380,14 @@ function use-gh-zawakin
     echo "Switched gh to zawakin (for zawakin / knowledge-work)"
 end
 
-function use-gh-trybase77
-    set -gx GH_CONFIG_DIR ~/.config/gh/trybase77
-    echo "Switched gh to trybase77"
-end
-
 # Auto-switch gh profile based on current directory
 function __auto_gh_profile --on-variable PWD
     set -l current_dir (pwd)
 
-    if string match -q "*/go/src/github.com/trybase77/*" -- $current_dir
-        set -gx GH_CONFIG_DIR ~/.config/gh/trybase77
-
-        # Auto-fix HTTPS remote URLs to SSH for trybase77
-        if test -d .git
-            set -l origin_url (git config --get remote.origin.url 2>/dev/null)
-            if test -n "$origin_url"
-                # Convert HTTPS to SSH with trybase77 host
-                if string match -q "https://github.com/trybase77/*" -- $origin_url
-                    set -l new_url (string replace "https://github.com/" "git@github.com-trybase77:" -- $origin_url)
-                    git remote set-url origin $new_url 2>/dev/null
-                    and echo "(auto) Fixed origin → $new_url"
-                else if string match -q "git@github.com:trybase77/*" -- $origin_url
-                    # Convert standard SSH to trybase77-specific host
-                    set -l new_url (string replace "git@github.com:" "git@github.com-trybase77:" -- $origin_url)
-                    git remote set-url origin $new_url 2>/dev/null
-                    and echo "(auto) Fixed origin → $new_url"
-                end
-            end
-        end
-    else if string match -q "*/go/src/github.com/zawakin/*" -- $current_dir
+    if string match -q "*/go/src/github.com/zawakin/*" -- $current_dir
         set -gx GH_CONFIG_DIR ~/.config/gh/zawakin
-
-        # Auto-fix HTTPS remote URLs to SSH for zawakin
-        if test -d .git
-            set -l origin_url (git config --get remote.origin.url 2>/dev/null)
-            if test -n "$origin_url"
-                if string match -q "https://github.com/zawakin/*" -- $origin_url
-                    set -l new_url (string replace "https://github.com/" "git@github.com:" -- $origin_url)
-                    git remote set-url origin $new_url 2>/dev/null
-                    and echo "(auto) Fixed origin → $new_url"
-                end
-            end
-        end
     else if string match -q "*/go/src/github.com/knowledge-work/*" -- $current_dir
         set -gx GH_CONFIG_DIR ~/.config/gh/zawakin
-
-        # Auto-fix HTTPS remote URLs to SSH for knowledge-work
-        if test -d .git
-            set -l origin_url (git config --get remote.origin.url 2>/dev/null)
-            if test -n "$origin_url"
-                if string match -q "https://github.com/knowledge-work/*" -- $origin_url
-                    set -l new_url (string replace "https://github.com/" "git@github.com:" -- $origin_url)
-                    git remote set-url origin $new_url 2>/dev/null
-                    and echo "(auto) Fixed origin → $new_url"
-                end
-            end
-        end
     else
         # Default to zawakin profile
         set -gx GH_CONFIG_DIR ~/.config/gh/zawakin
@@ -447,7 +398,7 @@ end
 # Initialize gh profile on shell startup
 __auto_gh_profile
 
-# Robust ghq get wrapper for multi-account setup
+# Robust ghq get wrapper
 function ghqget
     # Set GHQ_ROOT if not already set
     set -q GHQ_ROOT; or set -l GHQ_ROOT ~/go/src
@@ -455,10 +406,9 @@ function ghqget
     if test (count $argv) -eq 0
         echo "Usage: ghqget <repo>..."
         echo "Examples:"
-        echo "  ghqget trybase77/repo"
-        echo "  ghqget github.com/trybase77/repo"
-        echo "  ghqget https://github.com/trybase77/repo"
-        echo "  ghqget git@github.com:zawakin/repo.git"
+        echo "  ghqget zawakin/repo"
+        echo "  ghqget github.com/zawakin/repo"
+        echo "  ghqget https://github.com/zawakin/repo"
         return 1
     end
 
@@ -466,7 +416,6 @@ function ghqget
         set -l repo $repo_input
         set -l owner ""
         set -l name ""
-        set -l ssh_host ""
 
         # Parse URL format
         if string match -qr '^https://github\.com/([^/]+)/(.+?)(?:\.git)?$' -- $repo
@@ -487,14 +436,7 @@ function ghqget
             continue
         end
 
-        # Determine SSH host and clone URL
-        if test "$owner" = "trybase77"
-            set ssh_host "github.com-trybase77"
-            echo "Cloning $owner/$name with trybase77 account..."
-        else
-            set ssh_host "github.com"
-            echo "Cloning $owner/$name with zawakin account..."
-        end
+        echo "Cloning $owner/$name..."
 
         # Construct target directory
         set -l target_dir "$GHQ_ROOT/github.com/$owner/$name"
@@ -508,8 +450,8 @@ function ghqget
         # Create parent directory
         mkdir -p (dirname "$target_dir")
 
-        # Clone repository
-        set -l clone_url "git@$ssh_host:$owner/$name.git"
+        # Clone repository using HTTPS
+        set -l clone_url "https://github.com/$owner/$name.git"
         if git clone "$clone_url" "$target_dir"
             echo "Successfully cloned to: $target_dir"
         else
