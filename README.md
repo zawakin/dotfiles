@@ -12,13 +12,16 @@ Modern dotfiles management using GNU stow for better organization and maintainab
 ## Quick Start
 
 ```console
-# Install Homebrew (if not installed)
+# 1. Install Xcode from App Store, then install Command Line Tools
+xcode-select --install
+
+# 2. Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Install stow (required before make)
+# 3. Install stow (required before make)
 brew install stow
 
-# Clone and setup
+# 4. Clone and setup
 git clone git@github.com:zawakin/dotfiles.git
 cd dotfiles
 make
