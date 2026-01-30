@@ -462,3 +462,4 @@ end
 
 alias gg='ghqget'
 
+export PATH="$HOME/.local/bin:$PATH"
