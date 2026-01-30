@@ -13,6 +13,7 @@ defaults write com.apple.universalaccess reduceMotion -bool true
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain InitialKeyRepeat -int 12
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 
 ### Trackpad
