@@ -81,7 +81,7 @@ restow-all: ## Restow all configurations (useful after updates)
 .PHONY: homebrew
 homebrew: stow-homebrew ## Install Homebrew packages
 	@echo "Installing Homebrew packages..."
-	@brew bundle
+	@brew bundle --file=homebrew/Brewfile
 	@brew autoupdate --start --upgrade --cleanup --enable-notification
 
 .PHONY: clean

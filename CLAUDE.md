@@ -4,12 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-### Setup and Installation
+### Setup and Installation (New PC)
 ```bash
-# Complete setup - installs all configurations
-make
+# 1. Install Homebrew (if not installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Setup specific components
+# 2. Install stow (required for dotfiles management)
+brew install stow
+
+# 3. Complete setup - installs all configurations
+make
+```
+
+### Setup specific components
 make help                # Show all available targets
 make osx-config         # Configure macOS system settings
 make git                # Setup Git configuration
@@ -22,7 +29,7 @@ make homebrew           # Install Homebrew packages and configure
 ### Package Management
 ```bash
 # Install all packages and extensions
-brew bundle             # Install from Brewfile
+brew bundle --file=homebrew/Brewfile
 ```
 
 ## Architecture and Structure
@@ -70,7 +77,8 @@ This is a personal dotfiles repository that manages development environment conf
 ```
 .
 ├── Makefile                    # Main setup orchestration
-├── Brewfile                    # Package definitions
+├── homebrew/
+│   └── Brewfile                # Package definitions (Homebrew, casks, VS Code extensions)
 ├── osx-config.sh              # macOS system configuration
 ├── .gitconfig                 # Git configuration
 ├── .gitconfig.kw              # Knowledge-work specific Git config

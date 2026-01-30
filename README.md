@@ -4,13 +4,21 @@ Modern dotfiles management using GNU stow for better organization and maintainab
 
 ## Prerequisites
 
-- GNU stow (automatically installed via Brewfile)
+- [Homebrew](https://brew.sh/)
+- GNU stow (`brew install stow`)
 - Git
 - Make
 
 ## Quick Start
 
 ```console
+# Install Homebrew (if not installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install stow (required before make)
+brew install stow
+
+# Clone and setup
 git clone git@github.com:zawakin/dotfiles.git
 cd dotfiles
 make
