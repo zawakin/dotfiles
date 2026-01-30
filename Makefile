@@ -6,7 +6,7 @@ HOME_DIR := $(HOME)
 STOW_TARGET := $(HOME_DIR)
 
 .PHONY: all
-all: osx-config stow-all homebrew
+all: osx-config homebrew stow-all
 
 .PHONY: help
 help: ## Show this help message
