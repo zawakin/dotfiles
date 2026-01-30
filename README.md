@@ -12,8 +12,7 @@ Modern dotfiles management using GNU stow for better organization and maintainab
 ## Quick Start
 
 ```console
-# 1. Install Xcode from App Store, then install Command Line Tools
-xcode-select --install
+# 1. Install Xcode from App Store
 
 # 2. Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
