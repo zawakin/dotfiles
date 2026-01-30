@@ -6,6 +6,9 @@ set -ux
 chflags nohidden ~/Library
 sudo chflags nohidden /Volumes
 
+### Accessibility
+defaults write com.apple.universalaccess reduceMotion -bool true
+
 ### Keyboard
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 defaults write NSGlobalDomain KeyRepeat -int 2
