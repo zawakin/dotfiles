@@ -1,3 +1,4 @@
+brew "direnv"
 brew "fish"
 brew "mise"
 brew "fzf"
