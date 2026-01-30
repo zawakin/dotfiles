@@ -40,6 +40,21 @@ defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 
 ### Dock
 defaults write com.apple.dock orientation -string "right"
+
+# Setup Dock apps using dockutil (if available)
+if command -v dockutil &> /dev/null; then
+    dockutil --remove all --no-restart
+
+    dockutil --add /System/Library/CoreServices/Finder.app --no-restart
+    dockutil --add "/Applications/Google Chrome.app" --no-restart
+    dockutil --add "/System/Applications/System Settings.app" --no-restart
+    dockutil --add /Applications/iTerm.app --no-restart
+    dockutil --add "/Applications/Visual Studio Code.app" --no-restart
+    dockutil --add /Applications/Slack.app --no-restart
+    dockutil --add /Applications/Obsidian.app --no-restart
+    dockutil --add "/System/Applications/Utilities/Activity Monitor.app" --no-restart
+fi
+
 killall Dock
 
 ### Disable functions

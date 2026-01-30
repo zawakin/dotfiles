@@ -1,4 +1,5 @@
 brew "direnv"
+brew "dockutil"
 brew "fish"
 brew "mise"
 brew "fzf"
