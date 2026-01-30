@@ -18,15 +18,7 @@ osx-config: ## Setup global system (OS) configurations
 	@./osx-config.sh
 
 .PHONY: stow-all
-stow-all: ## Setup all configurations using stow
-	@echo "Setting up all configurations with stow..."
-	@stow -v -t $(STOW_TARGET) git
-	@stow -v -t $(STOW_TARGET) ssh
-	@stow -v -t $(STOW_TARGET) vim
-	@stow -v -t $(STOW_TARGET) fish
-	@stow -v -t $(STOW_TARGET) gh
-	@stow -v -t $(STOW_TARGET) mise
-	@stow -v -t $(STOW_TARGET) homebrew
+stow-all: stow-git stow-ssh stow-vim stow-fish stow-gh stow-mise stow-homebrew ## Setup all configurations using stow
 
 .PHONY: stow-git
 stow-git: ## Setup Git configuration
