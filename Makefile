@@ -18,7 +18,13 @@ osx-config: ## Setup global system (OS) configurations
 	@./osx-config.sh
 
 .PHONY: stow-all
-stow-all: stow-git stow-ssh stow-vim stow-fish stow-gh stow-mise stow-homebrew ## Setup all configurations using stow
+stow-all: stow-git stow-ssh stow-vim stow-fish stow-gh stow-mise stow-homebrew iterm2 ## Setup all configurations using stow
+
+.PHONY: iterm2
+iterm2: ## Setup iTerm2 to load preferences from dotfiles
+	@echo "Setting up iTerm2 preferences..."
+	@defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+	@defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$(DOTFILES_DIR)/iterm2"
 
 .PHONY: stow-git
 stow-git: ## Setup Git configuration
