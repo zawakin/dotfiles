@@ -52,6 +52,17 @@ endif
 stow-fish: ## Setup Fish configuration
 	@echo "Setting up Fish configuration..."
 	@stow -v -t $(STOW_TARGET) fish
+	@FISH_PATH=$$(which fish); \
+	if [ -n "$$FISH_PATH" ]; then \
+		if ! grep -q "$$FISH_PATH" /etc/shells; then \
+			echo "Adding $$FISH_PATH to /etc/shells..."; \
+			echo "$$FISH_PATH" | sudo tee -a /etc/shells; \
+		fi; \
+		if [ "$$SHELL" != "$$FISH_PATH" ]; then \
+			echo "Setting fish as default shell..."; \
+			chsh -s "$$FISH_PATH"; \
+		fi; \
+	fi
 
 .PHONY: stow-gh
 stow-gh: ## Setup GitHub CLI configuration
