@@ -38,6 +38,10 @@ defaults write com.apple.LaunchServices LSQuarantine -bool false
 defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
 defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 
+### Dock
+defaults write com.apple.dock orientation -string "right"
+killall Dock
+
 ### Disable functions
 defaults write com.apple.dashboard mcx-disabled -bool true # Dashboard
 defaults write com.apple.dock mcx-expose-disabled -bool false # Mission Control
