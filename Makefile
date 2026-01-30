@@ -52,7 +52,7 @@ endif
 stow-fish: ## Setup Fish configuration
 	@echo "Setting up Fish configuration..."
 	@stow -v -t $(STOW_TARGET) fish
-	@FISH_PATH=$$(which fish); \
+	@FISH_PATH=$$(command -v fish 2>/dev/null); \
 	if [ -n "$$FISH_PATH" ]; then \
 		if ! grep -q "$$FISH_PATH" /etc/shells; then \
 			echo "Adding $$FISH_PATH to /etc/shells..."; \
@@ -62,6 +62,8 @@ stow-fish: ## Setup Fish configuration
 			echo "Setting fish as default shell..."; \
 			chsh -s "$$FISH_PATH"; \
 		fi; \
+	else \
+		echo "Fish not installed yet, skipping default shell setup. Run 'make fish' after 'make homebrew'."; \
 	fi
 
 .PHONY: stow-gh
