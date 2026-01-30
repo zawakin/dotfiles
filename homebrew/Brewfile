@@ -1,4 +1,5 @@
 brew "fish"
+brew "mise"
 brew "fzf"
 brew "fzy"
 brew "ghq"
