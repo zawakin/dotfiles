@@ -10,6 +10,7 @@ sudo chflags nohidden /Volumes
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain InitialKeyRepeat -int 12
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 
 ### Trackpad
 defaults write -g com.apple.mouse.tapBehavior -int 1
