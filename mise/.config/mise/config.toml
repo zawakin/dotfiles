@@ -1,6 +1,7 @@
 [settings]
 experimental = true
 idiomatic_version_file_enable_tools = ["python"]
+trusted_config_paths = ["/Users/zawakin/go/src/github.com/lanegrid", "/Users/zawakin/go/src/github.com/zawakin"]
 
 [tools]
 cargo = "latest"
