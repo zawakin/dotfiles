@@ -18,7 +18,7 @@ osx-config: ## Setup global system (OS) configurations
 	@./osx-config.sh
 
 .PHONY: stow-all
-stow-all: stow-git stow-ssh stow-vim stow-fish stow-gh stow-mise stow-homebrew iterm2 ## Setup all configurations using stow
+stow-all: stow-git stow-ssh stow-vim stow-fish stow-gh stow-mise stow-homebrew stow-tmux iterm2 ## Setup all configurations using stow
 
 .PHONY: iterm2
 iterm2: ## Setup iTerm2 to load preferences from dotfiles
@@ -74,6 +74,11 @@ stow-mise: ## Setup mise configuration
 	@echo "Setting up mise configuration..."
 	@stow -v -t $(STOW_TARGET) mise
 
+.PHONY: stow-tmux
+stow-tmux: ## Setup tmux configuration
+	@echo "Setting up tmux configuration..."
+	@stow -v -t $(STOW_TARGET) tmux
+
 .PHONY: stow-homebrew
 stow-homebrew: ## Setup Homebrew configuration
 	@echo "Setting up Homebrew configuration..."
@@ -82,12 +87,12 @@ stow-homebrew: ## Setup Homebrew configuration
 .PHONY: unstow-all
 unstow-all: ## Remove all stow configurations
 	@echo "Removing all stow configurations..."
-	@stow -v -t $(STOW_TARGET) -D git ssh vim fish gh mise homebrew 2>/dev/null || true
+	@stow -v -t $(STOW_TARGET) -D git ssh vim fish gh mise homebrew tmux 2>/dev/null || true
 
 .PHONY: restow-all
 restow-all: ## Restow all configurations (useful after updates)
 	@echo "Restowing all configurations..."
-	@stow -v -t $(STOW_TARGET) -R git ssh vim fish gh mise homebrew
+	@stow -v -t $(STOW_TARGET) -R git ssh vim fish gh mise homebrew tmux
 
 .PHONY: homebrew
 homebrew: stow-homebrew ## Install Homebrew packages
@@ -106,10 +111,11 @@ claude-workspace-cleanup: ## Clean up Claude workspace temporary files
 	@find $(HOME_DIR) -name "claude_workspace*" -type f -delete 2>/dev/null || true
 
 # Legacy targets for backward compatibility
-.PHONY: git ssh vim fish gh mise
+.PHONY: git ssh vim fish gh mise tmux
 git: stow-git
 ssh: stow-ssh
 vim: stow-vim
 fish: stow-fish
 gh: stow-gh
 mise: stow-mise
+tmux: stow-tmux
