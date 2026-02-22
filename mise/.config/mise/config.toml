@@ -5,6 +5,7 @@ trusted_config_paths = ["/Users/zawakin/go/src/github.com/lanegrid", "/Users/zaw
 
 [tools]
 cargo = "latest"
+mkcert = "latest"
 neovim = "latest"
 node = "24"
 rust = "stable"
