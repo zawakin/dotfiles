@@ -85,6 +85,8 @@ dotfiles/
 │   └── .config/fish/
 ├── homebrew/      # Homebrew configuration package
 │   └── Brewfile
+├── claude/        # Claude Code skills package
+│   └── .claude/skills/
 └── Makefile       # Main setup orchestration
 ```
 

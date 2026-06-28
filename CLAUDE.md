@@ -79,6 +79,8 @@ This is a personal dotfiles repository that manages development environment conf
 ├── Makefile                    # Main setup orchestration
 ├── homebrew/
 │   └── Brewfile                # Package definitions (Homebrew, casks, VS Code extensions)
+├── claude/
+│   └── .claude/skills/         # Claude Code skills (symlinked to ~/.claude/skills)
 ├── osx-config.sh              # macOS system configuration
 ├── .gitconfig                 # Git configuration
 ├── .gitconfig.kw              # Knowledge-work specific Git config
