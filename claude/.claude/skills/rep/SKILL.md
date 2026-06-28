@@ -1,18 +1,22 @@
 ---
 name: rep
-description: Safely rename or migrate a token/name across a git repository using the rep CLI (scan -> plan -> apply -> residual -> status). Use when the user wants a repo-wide rename of an identifier, package name, namespace, env var, or directory across tracked files, instead of ad-hoc sed/scripts.
-argument-hint: <old-token> [new-token]
+description: Rename a word across a whole git project, safely. The rep CLI finds every place a name appears (inside files and in file/folder names) and changes it to a new name in one careful, checkable pass, instead of hand-editing each file or running risky find-and-replace scripts. It works step by step (scan -> plan -> apply -> residual -> status) so you can see what will change before it changes, and check afterward that the old name is fully gone. Use it when the user wants to rename the same thing everywhere in a repo: a variable or function name, a package/library name, a namespace, an environment variable, or a directory.
 allowed-tools: Bash(rep*), Bash(git*), Read, Grep
 ---
 
 # rep — safe repo-wide rename / token migration
 
-`rep` performs mechanical renames as an auditable pipeline over **git-tracked
-files only**, with stable JSON output. Always pass `--json` and branch on the
-exit code.
+`rep` renames a word everywhere in a project, the safe way. Think of it as a very
+careful "find and replace" for an entire codebase: it only touches files that git
+already tracks, it shows you the plan before changing anything, and it can prove
+afterward that the old name is gone. Every command prints machine-readable JSON,
+so always pass `--json` and decide what to do next based on the exit code.
+
+It works in five steps — look first, decide, then change, then double-check:
 
 ```text
 scan -> plan -> apply -> residual -> status
+( find )  ( decide )  ( change )  ( verify )  ( where am I? )
 ```
 
 ## Before you start
