@@ -13,3 +13,10 @@ uv = "latest"
 vhs = "latest"
 yq = "latest"
 
+# Self-made Rust CLIs, installed globally via the cargo backend.
+# tree2md is on crates.io; git-workflow (gw) and rep build from git.
+# rep is a private repo, so `mise install` needs GitHub auth on a new machine.
+"cargo:tree2md" = "latest"
+"cargo:https://github.com/lanegrid/git-workflow" = "HEAD"
+"cargo:https://github.com/lanegrid/rep" = "HEAD"
+
