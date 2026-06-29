@@ -84,8 +84,13 @@ stow-homebrew: ## Setup Homebrew configuration
 	@echo "Setting up Homebrew configuration..."
 	@stow -v -t $(STOW_TARGET) homebrew
 
+.PHONY: claude-skills
+claude-skills: ## Symlink Claude skills from their ghq-managed repos
+	@echo "Linking Claude skills from ghq repositories..."
+	@./scripts/link-claude-skills.sh
+
 .PHONY: stow-claude
-stow-claude: ## Setup Claude Code skills configuration
+stow-claude: claude-skills ## Setup Claude Code skills configuration
 	@echo "Setting up Claude Code skills configuration..."
 	@stow -v -t $(STOW_TARGET) claude
 

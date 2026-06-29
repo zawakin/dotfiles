@@ -1,3 +1,9 @@
 # Fish auto-generated files
 fish/.config/fish/fish_variables
 fish/.config/fish/conf.d/
+
+# Claude skills are symlinked from ghq-managed repos via `make claude-skills`.
+# The symlinks are machine-specific (ghq paths), so generate them per machine
+# instead of committing. Keep the directory itself via .gitkeep.
+claude/.claude/skills/*
+!claude/.claude/skills/.gitkeep
