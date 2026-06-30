@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Workflow
+
+- **Commit directly to `main` and push.** This repo does NOT use pull requests.
+  Skip `gw new` / feature branches / `gh pr create` — just stage, commit, and
+  `git push` to `origin/main`. This overrides the global git-workflow skill's
+  PR-based flow.
+
 ## Development Commands
 
 ### Setup and Installation (New PC)
