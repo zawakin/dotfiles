@@ -16,6 +16,7 @@ set -euo pipefail
 # "<repo> <skill>" pairs, one skill per line.
 SKILLS=(
   "github.com/lanegrid/git-workflow git-workflow"
+  "github.com/lanegrid/git-workflow team-spawn"
   "github.com/lanegrid/rep rep"
 )
 
