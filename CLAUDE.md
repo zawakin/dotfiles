@@ -88,6 +88,8 @@ This is a personal dotfiles repository that manages development environment conf
 │   └── Brewfile                # Package definitions (Homebrew, casks, VS Code extensions)
 ├── claude/
 │   └── .claude/skills/         # Claude Code skills (symlinked to ~/.claude/skills)
+├── agents/
+│   └── .agents/skills/         # Shared agent skills (symlinked to ~/.agents/skills)
 ├── osx-config.sh              # macOS system configuration
 ├── .gitconfig                 # Git configuration
 ├── .gitconfig.kw              # Knowledge-work specific Git config
