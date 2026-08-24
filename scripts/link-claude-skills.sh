@@ -20,7 +20,6 @@ SKILLS=(
   "github.com/lanegrid/git-workflow git-workflow"
   "github.com/lanegrid/git-workflow team-spawn"
   "github.com/lanegrid/rep rep"
-  "github.com/lanegrid/wf wf"
 )
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
