@@ -20,3 +20,7 @@ These apply to every project, unless a repository's own `CLAUDE.md` overrides th
   session scratchpad directory and pass its path. Keep the message itself to the minimum:
   the file path(s) plus a one- or two-line summary. This applies in both directions:
   the main session hands work to agents via files, and agents report back via files.
+- **Keep personal identifiers out of outbound requests.** No personal name, personal email,
+  account handle, or private repository name/URL in User-Agents, URLs, or payloads. If a
+  service asks for a contact, use only the public contact the repository defines, through
+  its User-Agent helper when it has one.
