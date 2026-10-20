@@ -7,8 +7,17 @@ These apply to every project, unless a repository's own `CLAUDE.md` overrides th
 - **Load the `git-workflow` skill before your first tool call.** Always — even for read-only or docs work.
   **Main session only**: subagents must NOT load it and must not perform git operations
   (commit / push / PR) — they change files only; the main session handles git.
-- **Subagents run on Opus, not Fable.** When spawning subagents (Agent tool / workflow
-  agents), pass `model: "opus"` unless the user explicitly asks for another model.
+- **Choose each subagent's model and effort for its job; don't let it inherit.** Left
+  unset, a subagent inherits the session's model and effort, and a slow, deep setting makes
+  the user wait (a review agent once took 10–15 min, most of it reasoning). Decide both when
+  spawning (Agent tool / workflow agents), by the work, not by a fixed model name:
+  - Mechanical work (reading, searching, extracting, running commands, simple edits):
+    a fast, lighter model at low effort.
+  - Work the user is waiting on: a fast model at medium effort, with the task narrowed so
+    little reasoning is needed (compute what can be computed before handing it over).
+  - Unattended work where depth matters more than time: a more capable model at high effort.
+  - Never the highest effort for a subagent unless the user asks. State the model and effort
+    in one line when spawning.
   (`subagent_type: "fork"` inherits the session model and cannot be overridden — prefer
   non-fork agents when the work doesn't need the full conversation context.)
 - **Close agents when done.** Once a spawned agent's result is collected and no follow-up
