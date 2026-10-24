@@ -9,3 +9,8 @@ claude/.claude/skills/*
 !claude/.claude/skills/.gitkeep
 agents/.agents/skills/*
 !agents/.agents/skills/.gitkeep
+
+# brew bundle on Homebrew >= 4.5 no longer writes a lock file; ignore one if an
+# older brew ever produces it. The Brewfile itself is the only tracked source.
+Brewfile.lock.json
+.Brewfile.lock.json

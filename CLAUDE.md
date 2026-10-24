@@ -35,9 +35,16 @@ make homebrew           # Install Homebrew packages and configure
 
 ### Package Management
 ```bash
-# Install all packages and extensions
-brew bundle --file=homebrew/Brewfile
+make homebrew     # install everything in ~/.Brewfile (brew bundle --global)
+make brew-dump    # machine -> repo: rewrite homebrew/.Brewfile from what is installed
+make brew-check   # show drift in both directions without changing anything
 ```
+
+Homebrew policy: `homebrew/.Brewfile` (stowed to `~/.Brewfile`) is the only
+tracked file. There is no lock file; `brew bundle` on Homebrew >= 4.5 does not
+write one and versions are not pinned. The machine is the source of truth:
+install with `brew install`, run `make brew-dump`, commit. Do not hand-edit
+the Brewfile except to delete an entry before `brew bundle cleanup --global --force`.
 
 ## Architecture and Structure
 
@@ -56,7 +63,7 @@ This is a personal dotfiles repository that manages development environment conf
 - SSH configuration with host-specific settings
 
 **Package Management:**
-- `Brewfile` - Comprehensive package list including CLI tools, applications, and VS Code extensions
+- `homebrew/.Brewfile` - Package list (formulae, casks, taps, VS Code extensions), regenerated from the machine via `make brew-dump`
 - Includes development tools (git, vim, jq, etc.), applications (Docker, VS Code, etc.), and VS Code extensions
 
 ### Key Features
@@ -85,7 +92,7 @@ This is a personal dotfiles repository that manages development environment conf
 .
 ├── Makefile                    # Main setup orchestration
 ├── homebrew/
-│   └── Brewfile                # Package definitions (Homebrew, casks, VS Code extensions)
+│   └── .Brewfile               # Package definitions (stowed to ~/.Brewfile; `brew bundle --global`)
 ├── claude/
 │   └── .claude/skills/         # Claude Code skills (symlinked to ~/.claude/skills)
 ├── agents/

@@ -109,10 +109,29 @@ restow-all: ## Restow all configurations (useful after updates)
 	@echo "Restowing all configurations..."
 	@stow -v -t $(STOW_TARGET) -R git ssh vim fish gh mise homebrew tmux claude agents
 
+# Homebrew: ~/.Brewfile (stowed from homebrew/.Brewfile) is the single source of
+# truth; no lock file is tracked (brew bundle no longer writes one). The machine
+# is authoritative: install with `brew install`, then `make brew-dump` to record.
+# Scope is formulae/casks/taps/VS Code only: cargo and npm globals are not
+# brew's job here (local crates and mise-managed node would not reinstall).
 .PHONY: homebrew
-homebrew: stow-homebrew ## Install Homebrew packages
+homebrew: stow-homebrew ## Install Homebrew packages from ~/.Brewfile
 	@echo "Installing Homebrew packages..."
-	@brew bundle --file=homebrew/Brewfile
+	@brew bundle --global
+
+.PHONY: brew-dump
+brew-dump: stow-homebrew ## Rewrite ~/.Brewfile from what is installed on this machine
+	@echo "Dumping installed Homebrew packages to ~/.Brewfile..."
+	@brew bundle dump --global --force --no-describe --formula --cask --tap --vscode
+	@git -C $(DOTFILES_DIR) --no-pager diff --stat -- homebrew/.Brewfile
+
+.PHONY: brew-check
+brew-check: stow-homebrew ## Show drift between ~/.Brewfile and this machine (no changes made)
+	@echo "Missing on this machine (listed in Brewfile):"
+	@brew bundle check --global --verbose || true
+	@echo
+	@echo "Installed but not in Brewfile (brew bundle cleanup --global --force would remove):"
+	@brew bundle cleanup --global
 
 .PHONY: clean
 clean: ## Clean up broken symlinks

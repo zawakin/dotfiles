@@ -39,7 +39,9 @@ This will:
 make help          # Show all available commands
 make               # Complete setup (osx-config + stow-all + homebrew)
 make stow-all      # Setup all configurations using stow
-make homebrew      # Install Homebrew packages
+make homebrew      # Install Homebrew packages from ~/.Brewfile
+make brew-dump     # Record what is installed on this machine into the Brewfile
+make brew-check    # Show drift between the Brewfile and this machine
 ```
 
 ### Individual Package Management
@@ -50,6 +52,22 @@ make stow-vim      # Setup Vim configuration only
 make stow-ssh      # Setup SSH configuration only  
 make stow-fish     # Setup Fish shell configuration only
 make stow-homebrew # Setup Homebrew configuration only
+```
+
+### Homebrew Packages
+
+`homebrew/.Brewfile` is stowed to `~/.Brewfile`, so every `brew bundle` command
+works with `--global` and no `--file` flag. No lock file is tracked: Homebrew
+no longer writes one, and versions are intentionally not pinned. The machine is
+the source of truth.
+
+```console
+brew install <formula>   # install as usual
+make brew-dump           # rewrite the Brewfile from the installed state
+git commit -am "chore(brew): add <formula>"
+
+make brew-check          # see what is missing here / what is extra here
+brew bundle cleanup --global --force   # remove extras, after deleting lines you no longer want
 ```
 
 ### Maintenance Commands
@@ -84,7 +102,7 @@ dotfiles/
 ├── fish/          # Fish shell configuration package
 │   └── .config/fish/
 ├── homebrew/      # Homebrew configuration package
-│   └── Brewfile
+│   └── .Brewfile  # stowed to ~/.Brewfile, used by `brew bundle --global`
 ├── claude/        # Claude Code skills package
 │   └── .claude/skills/
 └── Makefile       # Main setup orchestration
