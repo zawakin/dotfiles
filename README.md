@@ -43,6 +43,7 @@ Brewfile entry comes from Homebrew, crates.io or a public git repo.
 make help          # Show all available commands
 make               # Complete setup (osx-config + stow-all + homebrew)
 make stow-all      # Setup all configurations using stow
+make osx-check     # Show drift between osx-config.sh and this machine
 make mise-install  # Install mise and its tools (node, rust, uv, ...)
 make homebrew      # Install Homebrew packages and cargo crates from ~/.Brewfile
 make brew-dump     # Record what is installed on this machine into the Brewfile
@@ -88,6 +89,19 @@ npm globals are excluded on purpose. Two cargo rules:
   `make brew-check` always reports `wf` as extra and
   `brew bundle cleanup --global --force` would uninstall it; reinstall it
   afterwards if you run that.
+
+### macOS Settings
+
+`osx-config.sh` is a list of `defaults` keys plus the Dock apps and the
+control+1..8 "switch to desktop" hotkeys. `make osx-config` writes only what
+differs and restarts Dock/Finder as needed; `make osx-check` reports drift
+without changing anything. The machine is the source of truth: change a
+setting in System Settings, run `make osx-check`, copy the `now` value into
+the script, commit.
+
+Not recorded, because macOS does not expose them as plain defaults: the
+number and order of Mission Control spaces, per-space wallpapers, and input
+sources. Create the spaces by hand after a fresh install; the hotkeys then work.
 
 ### Maintenance Commands
 

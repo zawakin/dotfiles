@@ -25,7 +25,8 @@ make
 
 ### Setup specific components
 make help                # Show all available targets
-make osx-config         # Configure macOS system settings
+make osx-config         # Apply macOS settings (writes only what differs)
+make osx-check          # Show drift between osx-config.sh and this machine
 make git                # Setup Git configuration
 make ssh                # Setup SSH configuration  
 make vim                # Setup Vim configuration
@@ -60,7 +61,7 @@ This is a personal dotfiles repository that manages development environment conf
 ### Configuration Components
 
 **Core System Configuration:**
-- `osx-config.sh` - macOS system preferences and UI settings
+- `osx-config.sh` - macOS settings as data (`SETTINGS` = host|domain|key|type|value, `DOCK_APPS`, `SPACE_HOTKEYS`); `apply` writes only what differs, `check` reports drift. Machine is the source of truth: run `make osx-check`, copy the `now` value in, commit. Spaces count/order are not scriptable and stay manual.
 - `Makefile` - Main orchestration for all setup tasks
 
 **Development Tools:**

@@ -28,9 +28,12 @@ help: ## Show this help message
 	@echo
 	@echo "One package: make stow-<pkg> (alias: make <pkg>), pkg in: $(PACKAGES)"
 
-osx-config: ## Setup global system (OS) configurations
+osx-config: ## Apply macOS settings (defaults, Dock apps, Mission Control hotkeys)
 	@echo "Setting up macOS configuration..."
 	@./osx-config.sh
+
+osx-check: ## Show drift between osx-config.sh and this machine (no changes made)
+	@./osx-config.sh check
 
 # ---------------------------------------------------------------------------
 # Stow
@@ -141,6 +144,6 @@ claude-workspace-cleanup: ## Clean up Claude workspace temporary files
 	@find $(HOME) -name ".claude_workspace*" -type f -delete 2>/dev/null || true
 	@find $(HOME) -name "claude_workspace*" -type f -delete 2>/dev/null || true
 
-.PHONY: all help osx-config stow-all unstow-all restow-all claude-skills vim-plug fish-shell iterm2 \
+.PHONY: all help osx-config osx-check stow-all unstow-all restow-all claude-skills vim-plug fish-shell iterm2 \
         $(PACKAGES) $(STOW_TARGETS) \
         mise-install homebrew brew-dump brew-check clean claude-workspace-cleanup
