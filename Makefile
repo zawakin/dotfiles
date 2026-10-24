@@ -112,7 +112,7 @@ restow-all: ## Restow all configurations (useful after updates)
 # Homebrew: ~/.Brewfile (stowed from homebrew/.Brewfile) is the single source of
 # truth; no lock file is tracked (brew bundle no longer writes one). The machine
 # is authoritative: install with `brew install`, then `make brew-dump` to record.
-# Scope is formulae/casks/taps/VS Code only: cargo and npm globals are not
+# Scope is formulae/casks/taps only: VS Code is no longer used, and cargo/npm globals are not
 # brew's job here (local crates and mise-managed node would not reinstall).
 .PHONY: homebrew
 homebrew: stow-homebrew ## Install Homebrew packages from ~/.Brewfile
@@ -122,7 +122,7 @@ homebrew: stow-homebrew ## Install Homebrew packages from ~/.Brewfile
 .PHONY: brew-dump
 brew-dump: stow-homebrew ## Rewrite ~/.Brewfile from what is installed on this machine
 	@echo "Dumping installed Homebrew packages to ~/.Brewfile..."
-	@brew bundle dump --global --force --no-describe --formula --cask --tap --vscode
+	@brew bundle dump --global --force --no-describe --formula --cask --tap
 	@git -C $(DOTFILES_DIR) --no-pager diff --stat -- homebrew/.Brewfile
 
 .PHONY: brew-check

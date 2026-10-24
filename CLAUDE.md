@@ -63,8 +63,8 @@ This is a personal dotfiles repository that manages development environment conf
 - SSH configuration with host-specific settings
 
 **Package Management:**
-- `homebrew/.Brewfile` - Package list (formulae, casks, taps, VS Code extensions), regenerated from the machine via `make brew-dump`
-- Includes development tools (git, vim, jq, etc.), applications (Docker, VS Code, etc.), and VS Code extensions
+- `homebrew/.Brewfile` - Package list (formulae, casks, taps), regenerated from the machine via `make brew-dump` (VS Code extensions are intentionally excluded)
+- Includes development tools (git, vim, jq, etc.) and applications (Docker, iTerm2, Zed, etc.)
 
 ### Key Features
 
