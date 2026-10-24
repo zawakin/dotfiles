@@ -14,3 +14,9 @@ agents/.agents/skills/*
 # older brew ever produces it. The Brewfile itself is the only tracked source.
 Brewfile.lock.json
 .Brewfile.lock.json
+
+# tmux workspaces (tw save) reference local repo paths, many of them private
+# or not on GitHub at all, so they are machine-specific. dotfiles.conf is kept
+# as the example.
+tmux/.config/tmux/workspaces/*.conf
+!tmux/.config/tmux/workspaces/dotfiles.conf
