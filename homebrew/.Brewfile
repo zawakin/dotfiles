@@ -1,5 +1,3 @@
-tap "stripe/stripe-cli"
-brew "asdf"
 brew "cargo-release"
 brew "direnv"
 brew "dockutil"
