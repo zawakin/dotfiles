@@ -26,10 +26,14 @@ cd dotfiles
 make
 ```
 
-This will:
+This will, in order:
 1. Configure macOS system settings
-2. Install and configure all development tools using stow
-3. Install Homebrew packages
+2. Link all configurations with stow (including `~/.Brewfile` and the mise config)
+3. Install mise and run `mise install` (rust provides `cargo`)
+4. Run `brew bundle --global`: formulae, casks, taps and cargo crates
+
+No GitHub login is needed for any of this: the dotfiles repo is public and every
+Brewfile entry comes from Homebrew, crates.io or a public git repo.
 
 ## Usage
 
@@ -39,7 +43,8 @@ This will:
 make help          # Show all available commands
 make               # Complete setup (osx-config + stow-all + homebrew)
 make stow-all      # Setup all configurations using stow
-make homebrew      # Install Homebrew packages from ~/.Brewfile
+make mise-install  # Install mise and its tools (node, rust, uv, ...)
+make homebrew      # Install Homebrew packages and cargo crates from ~/.Brewfile
 make brew-dump     # Record what is installed on this machine into the Brewfile
 make brew-check    # Show drift between the Brewfile and this machine
 ```
@@ -62,13 +67,27 @@ no longer writes one, and versions are intentionally not pinned. The machine is
 the source of truth.
 
 ```console
-brew install <formula>   # install as usual
+brew install <formula>   # install as usual (or cargo install <crate>)
 make brew-dump           # rewrite the Brewfile from the installed state
 git commit -am "chore(brew): add <formula>"
 
 make brew-check          # see what is missing here / what is extra here
 brew bundle cleanup --global --force   # remove extras, after deleting lines you no longer want
 ```
+
+The dump covers formulae, casks, taps and cargo crates. VS Code extensions and
+npm globals are excluded on purpose. Two cargo rules:
+
+- A crate whose name is taken by someone else on crates.io must be installed
+  from git so the dump records a `source:`; a bare name would install the wrong
+  crate on a new machine. `rep` is installed this way:
+  `cargo install --git https://github.com/lanegrid/rep`.
+- `wf` lives in a private repo, so `make brew-dump` drops it from this public
+  Brewfile. On a new machine, after `gh auth login`, install it by hand with
+  `cargo install --git <private repo url>`. Because it is not listed,
+  `make brew-check` always reports `wf` as extra and
+  `brew bundle cleanup --global --force` would uninstall it; reinstall it
+  afterwards if you run that.
 
 ### Maintenance Commands
 

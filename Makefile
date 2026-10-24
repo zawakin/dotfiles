@@ -6,7 +6,10 @@ HOME_DIR := $(HOME)
 STOW_TARGET := $(HOME_DIR)
 
 .PHONY: all
-all: osx-config homebrew stow-all
+# Order matters on a fresh machine: stow first (links ~/.Brewfile and the mise
+# config), then homebrew, which installs mise, runs `mise install` (rust gives
+# cargo) and only then `brew bundle`, whose cargo entries need cargo on PATH.
+all: osx-config stow-all homebrew
 
 .PHONY: help
 help: ## Show this help message
@@ -111,27 +114,41 @@ restow-all: ## Restow all configurations (useful after updates)
 
 # Homebrew: ~/.Brewfile (stowed from homebrew/.Brewfile) is the single source of
 # truth; no lock file is tracked (brew bundle no longer writes one). The machine
-# is authoritative: install with `brew install`, then `make brew-dump` to record.
-# Scope is formulae/casks/taps only: VS Code is no longer used, and cargo/npm globals are not
-# brew's job here (local crates and mise-managed node would not reinstall).
+# is authoritative: install with `brew install` / `cargo install`, then
+# `make brew-dump` to record.
+# Scope is formulae/casks/taps/cargo. VS Code is no longer used; npm globals are
+# not brew's job here (mise-managed node would not reinstall). Own crates whose
+# name is taken on crates.io must be installed with `cargo install --git <url>`
+# so the dump records a `source:`; a bare name would install the wrong crate.
+# `wf` lives in a private repo, so it is dropped from the public Brewfile and
+# installed by hand (see README).
+BREWFILE := $(DOTFILES_DIR)/homebrew/.Brewfile
+
+.PHONY: mise-install
+mise-install: stow-mise ## Install mise (via brew) and the tools in ~/.config/mise/config.toml
+	@command -v mise >/dev/null 2>&1 || brew install mise
+	@echo "Installing mise-managed tools..."
+	@mise install
+
 .PHONY: homebrew
-homebrew: stow-homebrew ## Install Homebrew packages from ~/.Brewfile
+homebrew: stow-homebrew mise-install ## Install Homebrew packages (and cargo crates) from ~/.Brewfile
 	@echo "Installing Homebrew packages..."
-	@brew bundle --global
+	@mise exec -- brew bundle --global
 
 .PHONY: brew-dump
 brew-dump: stow-homebrew ## Rewrite ~/.Brewfile from what is installed on this machine
 	@echo "Dumping installed Homebrew packages to ~/.Brewfile..."
-	@brew bundle dump --global --force --no-describe --formula --cask --tap
+	@mise exec -- brew bundle dump --global --force --no-describe --formula --cask --tap --cargo
+	@sed -i '' '/^cargo "wf"\(,.*\)\{0,1\}$$/d' $(BREWFILE)
 	@git -C $(DOTFILES_DIR) --no-pager diff --stat -- homebrew/.Brewfile
 
 .PHONY: brew-check
 brew-check: stow-homebrew ## Show drift between ~/.Brewfile and this machine (no changes made)
 	@echo "Missing on this machine (listed in Brewfile):"
-	@brew bundle check --global --verbose || true
+	@mise exec -- brew bundle check --global --verbose || true
 	@echo
 	@echo "Installed but not in Brewfile (brew bundle cleanup --global --force would remove):"
-	@brew bundle cleanup --global
+	@mise exec -- brew bundle cleanup --global
 
 .PHONY: clean
 clean: ## Clean up broken symlinks

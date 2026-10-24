@@ -35,7 +35,8 @@ make homebrew           # Install Homebrew packages and configure
 
 ### Package Management
 ```bash
-make homebrew     # install everything in ~/.Brewfile (brew bundle --global)
+make mise-install # install mise (via brew) and `mise install` (rust gives cargo)
+make homebrew     # install everything in ~/.Brewfile (mise exec -- brew bundle --global)
 make brew-dump    # machine -> repo: rewrite homebrew/.Brewfile from what is installed
 make brew-check   # show drift in both directions without changing anything
 ```
@@ -43,8 +44,14 @@ make brew-check   # show drift in both directions without changing anything
 Homebrew policy: `homebrew/.Brewfile` (stowed to `~/.Brewfile`) is the only
 tracked file. There is no lock file; `brew bundle` on Homebrew >= 4.5 does not
 write one and versions are not pinned. The machine is the source of truth:
-install with `brew install`, run `make brew-dump`, commit. Do not hand-edit
-the Brewfile except to delete an entry before `brew bundle cleanup --global --force`.
+install with `brew install` or `cargo install`, run `make brew-dump`, commit.
+Do not hand-edit the Brewfile except to delete an entry before
+`brew bundle cleanup --global --force`. Scope: formulae, casks, taps, cargo
+(VS Code and npm excluded). `make all` order is osx-config -> stow-all ->
+homebrew, because brew bundle's cargo entries need cargo from mise first.
+Own crates with a name collision on crates.io are installed `--git` so the dump
+records a `source:` (rep). `wf` is in a private repo and is filtered out of
+the public Brewfile by `make brew-dump`; install it by hand on a new machine.
 
 ## Architecture and Structure
 
@@ -63,7 +70,7 @@ This is a personal dotfiles repository that manages development environment conf
 - SSH configuration with host-specific settings
 
 **Package Management:**
-- `homebrew/.Brewfile` - Package list (formulae, casks, taps), regenerated from the machine via `make brew-dump` (VS Code extensions are intentionally excluded)
+- `homebrew/.Brewfile` - Package list (formulae, casks, taps, cargo crates), regenerated from the machine via `make brew-dump` (VS Code and npm are intentionally excluded)
 - Includes development tools (git, vim, jq, etc.) and applications (Docker, iTerm2, Zed, etc.)
 
 ### Key Features
