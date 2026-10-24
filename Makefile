@@ -1,58 +1,72 @@
 ## -*- mode: makefile-gmake; -*-
+#
+# Thin task runner for this dotfiles repo. Nothing here is a real build: every
+# target is phony, make is used because it ships with the Xcode Command Line
+# Tools and so works on a fresh machine before anything else is installed.
 
-# Variables
-DOTFILES_DIR := $(shell pwd)
-HOME_DIR := $(HOME)
-STOW_TARGET := $(HOME_DIR)
+DOTFILES_DIR := $(CURDIR)
+STOW_TARGET  := $(HOME)
+BREWFILE     := $(DOTFILES_DIR)/homebrew/.Brewfile
 
-.PHONY: all
+# Every stow package: `stow-<name>` links it, `<name>` is a short alias.
+PACKAGES     := git ssh vim fish gh mise homebrew tmux claude agents
+STOW_TARGETS := $(addprefix stow-,$(PACKAGES))
+
+.DEFAULT_GOAL := all
+
+# ---------------------------------------------------------------------------
+# Top level
+# ---------------------------------------------------------------------------
+
 # Order matters on a fresh machine: stow first (links ~/.Brewfile and the mise
 # config), then homebrew, which installs mise, runs `mise install` (rust gives
 # cargo) and only then `brew bundle`, whose cargo entries need cargo on PATH.
-all: osx-config stow-all homebrew
+all: osx-config stow-all homebrew ## Complete setup (osx-config + stow-all + homebrew)
 
-.PHONY: help
 help: ## Show this help message
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_%-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+	@echo
+	@echo "One package: make stow-<pkg> (alias: make <pkg>), pkg in: $(PACKAGES)"
 
-.PHONY: osx-config
 osx-config: ## Setup global system (OS) configurations
 	@echo "Setting up macOS configuration..."
 	@./osx-config.sh
 
-.PHONY: stow-all
-stow-all: stow-git stow-ssh stow-vim stow-fish stow-gh stow-mise stow-homebrew stow-tmux stow-claude stow-agents iterm2 ## Setup all configurations using stow
+# ---------------------------------------------------------------------------
+# Stow
+# ---------------------------------------------------------------------------
 
-.PHONY: iterm2
-iterm2: ## Setup iTerm2 to load preferences from dotfiles
-	@echo "Setting up iTerm2 preferences..."
-	@defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
-	@defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$(DOTFILES_DIR)/iterm2"
+stow-all: $(STOW_TARGETS) vim-plug fish-shell iterm2 ## Link all packages and run their post-steps
 
-.PHONY: stow-git
-stow-git: ## Setup Git configuration
-	@echo "Setting up Git configuration..."
-	@stow -v -t $(STOW_TARGET) git
+# Static pattern rule (not `stow-%:`): phony targets skip implicit rule search,
+# and this also rejects package names that are not in PACKAGES.
+$(STOW_TARGETS): stow-%:
+	@echo "Stowing $*..."
+	@stow -v -t $(STOW_TARGET) $*
 
-.PHONY: stow-ssh
-stow-ssh: ## Setup SSH configuration
-	@echo "Setting up SSH configuration..."
-	@stow -v -t $(STOW_TARGET) ssh
+unstow-all: ## Unlink all packages
+	@echo "Removing all stow configurations..."
+	@stow -v -t $(STOW_TARGET) -D $(PACKAGES) 2>/dev/null || true
 
-.PHONY: stow-vim
-stow-vim: ## Setup Vim configuration
-	@echo "Setting up Vim configuration..."
-	@stow -v -t $(STOW_TARGET) vim
-ifeq ($(shell command -v vim 2>/dev/null),)
-	@echo "Vim not found, skipping vim-plug installation"
-else
-	@curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-endif
+restow-all: ## Relink all packages (useful after updates)
+	@echo "Restowing all configurations..."
+	@stow -v -t $(STOW_TARGET) -R $(PACKAGES)
 
-.PHONY: stow-fish
-stow-fish: ## Setup Fish configuration
-	@echo "Setting up Fish configuration..."
-	@stow -v -t $(STOW_TARGET) fish
+# Packages with extra requirements or post-steps.
+stow-claude stow-agents: claude-skills
+
+claude-skills: ## Symlink Claude skills from their ghq-managed repos
+	@echo "Linking Claude skills from ghq repositories..."
+	@./scripts/link-claude-skills.sh
+
+vim-plug: stow-vim ## Install vim-plug (skipped when vim is missing)
+	@if command -v vim >/dev/null 2>&1; then \
+		curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim; \
+	else \
+		echo "Vim not found, skipping vim-plug installation"; \
+	fi
+
+fish-shell: stow-fish ## Register fish in /etc/shells and make it the login shell
 	@FISH_PATH=$$(command -v fish 2>/dev/null); \
 	if [ -n "$$FISH_PATH" ]; then \
 		if ! grep -q "$$FISH_PATH" /etc/shells; then \
@@ -67,54 +81,23 @@ stow-fish: ## Setup Fish configuration
 		echo "Fish not installed yet, skipping default shell setup. Run 'make fish' after 'make homebrew'."; \
 	fi
 
-.PHONY: stow-gh
-stow-gh: ## Setup GitHub CLI configuration
-	@echo "Setting up GitHub CLI configuration..."
-	@stow -v -t $(STOW_TARGET) gh
+iterm2: ## Setup iTerm2 to load preferences from dotfiles
+	@echo "Setting up iTerm2 preferences..."
+	@defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+	@defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$(DOTFILES_DIR)/iterm2"
 
-.PHONY: stow-mise
-stow-mise: ## Setup mise configuration
-	@echo "Setting up mise configuration..."
-	@stow -v -t $(STOW_TARGET) mise
+# Short aliases: `make git` == `make stow-git`; vim and fish also run their post-step.
+$(PACKAGES): %: stow-%
+vim: vim-plug
+fish: fish-shell
 
-.PHONY: stow-tmux
-stow-tmux: ## Setup tmux configuration
-	@echo "Setting up tmux configuration..."
-	@stow -v -t $(STOW_TARGET) tmux
-
-.PHONY: stow-homebrew
-stow-homebrew: ## Setup Homebrew configuration
-	@echo "Setting up Homebrew configuration..."
-	@stow -v -t $(STOW_TARGET) homebrew
-
-.PHONY: claude-skills
-claude-skills: ## Symlink Claude skills from their ghq-managed repos
-	@echo "Linking Claude skills from ghq repositories..."
-	@./scripts/link-claude-skills.sh
-
-.PHONY: stow-claude
-stow-claude: claude-skills ## Setup Claude Code skills configuration
-	@echo "Setting up Claude Code skills configuration..."
-	@stow -v -t $(STOW_TARGET) claude
-
-.PHONY: stow-agents
-stow-agents: claude-skills ## Setup shared agent skills configuration
-	@echo "Setting up shared agent skills configuration..."
-	@stow -v -t $(STOW_TARGET) agents
-
-.PHONY: unstow-all
-unstow-all: ## Remove all stow configurations
-	@echo "Removing all stow configurations..."
-	@stow -v -t $(STOW_TARGET) -D git ssh vim fish gh mise homebrew tmux claude agents 2>/dev/null || true
-
-.PHONY: restow-all
-restow-all: ## Restow all configurations (useful after updates)
-	@echo "Restowing all configurations..."
-	@stow -v -t $(STOW_TARGET) -R git ssh vim fish gh mise homebrew tmux claude agents
-
-# Homebrew: ~/.Brewfile (stowed from homebrew/.Brewfile) is the single source of
-# truth; no lock file is tracked (brew bundle no longer writes one). The machine
-# is authoritative: install with `brew install` / `cargo install`, then
+# ---------------------------------------------------------------------------
+# Homebrew
+# ---------------------------------------------------------------------------
+#
+# ~/.Brewfile (stowed from homebrew/.Brewfile) is the single source of truth;
+# no lock file is tracked (brew bundle no longer writes one). The machine is
+# authoritative: install with `brew install` / `cargo install`, then
 # `make brew-dump` to record.
 # Scope is formulae/casks/taps/cargo. VS Code is no longer used; npm globals are
 # not brew's job here (mise-managed node would not reinstall). Own crates whose
@@ -122,27 +105,22 @@ restow-all: ## Restow all configurations (useful after updates)
 # so the dump records a `source:`; a bare name would install the wrong crate.
 # `wf` lives in a private repo, so it is dropped from the public Brewfile and
 # installed by hand (see README).
-BREWFILE := $(DOTFILES_DIR)/homebrew/.Brewfile
 
-.PHONY: mise-install
 mise-install: stow-mise ## Install mise (via brew) and the tools in ~/.config/mise/config.toml
 	@command -v mise >/dev/null 2>&1 || brew install mise
 	@echo "Installing mise-managed tools..."
 	@mise install
 
-.PHONY: homebrew
 homebrew: stow-homebrew mise-install ## Install Homebrew packages (and cargo crates) from ~/.Brewfile
 	@echo "Installing Homebrew packages..."
 	@mise exec -- brew bundle --global
 
-.PHONY: brew-dump
 brew-dump: stow-homebrew ## Rewrite ~/.Brewfile from what is installed on this machine
 	@echo "Dumping installed Homebrew packages to ~/.Brewfile..."
 	@mise exec -- brew bundle dump --global --force --no-describe --formula --cask --tap --cargo
 	@sed -i '' '/^cargo "wf"\(,.*\)\{0,1\}$$/d' $(BREWFILE)
 	@git -C $(DOTFILES_DIR) --no-pager diff --stat -- homebrew/.Brewfile
 
-.PHONY: brew-check
 brew-check: stow-homebrew ## Show drift between ~/.Brewfile and this machine (no changes made)
 	@echo "Missing on this machine (listed in Brewfile):"
 	@mise exec -- brew bundle check --global --verbose || true
@@ -150,25 +128,19 @@ brew-check: stow-homebrew ## Show drift between ~/.Brewfile and this machine (no
 	@echo "Installed but not in Brewfile (brew bundle cleanup --global --force would remove):"
 	@mise exec -- brew bundle cleanup --global
 
-.PHONY: clean
-clean: ## Clean up broken symlinks
-	@echo "Cleaning up broken symlinks..."
-	@find $(HOME_DIR) -type l -exec test ! -e {} \; -delete 2>/dev/null || true
+# ---------------------------------------------------------------------------
+# Maintenance
+# ---------------------------------------------------------------------------
 
-.PHONY: claude-workspace-cleanup
+clean: ## Clean up broken symlinks under $HOME
+	@echo "Cleaning up broken symlinks..."
+	@find $(HOME) -type l -exec test ! -e {} \; -delete 2>/dev/null || true
+
 claude-workspace-cleanup: ## Clean up Claude workspace temporary files
 	@echo "Cleaning up Claude workspace temporary files..."
-	@find $(HOME_DIR) -name ".claude_workspace*" -type f -delete 2>/dev/null || true
-	@find $(HOME_DIR) -name "claude_workspace*" -type f -delete 2>/dev/null || true
+	@find $(HOME) -name ".claude_workspace*" -type f -delete 2>/dev/null || true
+	@find $(HOME) -name "claude_workspace*" -type f -delete 2>/dev/null || true
 
-# Legacy targets for backward compatibility
-.PHONY: git ssh vim fish gh mise tmux claude agents
-git: stow-git
-ssh: stow-ssh
-vim: stow-vim
-fish: stow-fish
-gh: stow-gh
-mise: stow-mise
-tmux: stow-tmux
-claude: stow-claude
-agents: stow-agents
+.PHONY: all help osx-config stow-all unstow-all restow-all claude-skills vim-plug fish-shell iterm2 \
+        $(PACKAGES) $(STOW_TARGETS) \
+        mise-install homebrew brew-dump brew-check clean claude-workspace-cleanup
