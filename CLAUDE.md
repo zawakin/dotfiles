@@ -68,7 +68,7 @@ This is a personal dotfiles repository that manages development environment conf
 - Git configuration with conditional includes for different organizations
 - Vim configuration with custom settings and plugin management
 - Fish shell with custom aliases and environment variables
-- `tw` (fish function) - tmux workspaces: `tw save` dumps the live session (windows, panes, `#{window_layout}`, pane commands) to `~/.config/tmux/workspaces/<session>.conf`; `tw <name>` rebuilds it. Files are gitignored (private repo paths); `dotfiles.conf` is the committed example
+- `tw` (fish function) - tmux workspaces with explicit verbs: `tw save` dumps the live session (windows, panes, `#{window_layout}`, pane commands) to `~/.config/tmux/workspaces/<session>.conf` and diffs before overwriting; `tw up <name>` validates then builds it with pane commands typed but not executed (`--run` executes); `tw attach` only attaches. Files are gitignored (private repo paths); `dotfiles.conf` is the committed example
 - SSH configuration with host-specific settings
 
 **Package Management:**

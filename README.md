@@ -107,22 +107,29 @@ sources. Create the spaces by hand after a fresh install; the hotkeys then work.
 
 One tmux session per repo, and the right initial split differs per repo, so
 each session has a file in `~/.config/tmux/workspaces/<session>.conf` that is
-dumped from the live session rather than written by hand:
+dumped from the live session rather than written by hand. Every subcommand
+does one thing; nothing is created, run or overwritten unless asked by name.
 
 ```console
-tw                 # pick: running sessions, saved workspaces, then ghq repos
-tw studio          # attach if running, else rebuild from studio.conf
-tw save            # dump the current session (windows, panes, layout, commands)
-tw ls              # saved workspaces, ● = running
-tw edit studio     # fix a pane command the dump could not guess
+tw                  # list saved workspaces (● running) and the commands `up` would stage
+tw show studio      # print the validated plan for a workspace (read-only)
+tw attach studio    # attach/switch to a running session; errors if not running
+tw up studio        # build from studio.conf, then attach. Pane commands are TYPED
+                    # into their panes but not executed: review, press Enter.
+tw up studio --run  # same, but execute the commands
+tw save             # dump the current session; shows a diff and asks before overwriting
+tw save studio -f   # overwrite without asking
+tw edit studio      # fix a pane command the dump could not guess
 ```
 
-The file is a list of `window <cwd>`, `panes <n>`, `layout <tmux layout>`,
-`run <pane> <cmd>`, `focus <pane>` and `active` lines. Pane commands are
-recorded when they look restartable (claude, codex, `mise run ...`, npm, ...);
-anything else is left as a comment to promote by hand. Workspace files name
-local repo paths, many of them private, so they are gitignored; only
-`dotfiles.conf` is committed as the example.
+`up` validates the whole file first (directories exist, lines are known) and
+refuses before touching tmux if anything is off. The file is a list of
+`window <cwd>`, `panes <n>`, `layout <tmux layout>`, `run <pane> <cmd>`,
+`focus <pane>` and `active` lines. Pane commands are recorded when they look
+restartable (claude, codex, `mise run ...`, npm, ...); anything else is left as
+a comment to promote by hand. Workspace files name local repo paths, many of
+them private, so they are gitignored; only `dotfiles.conf` is committed as the
+example.
 
 ### Maintenance Commands
 
