@@ -1,7 +1,7 @@
 ---
 name: scout
 description: Mechanical lookups for a work item — read, search, extract, run read-only commands, summarize logs or docs. Returns facts with file:line or command evidence. Does not change the code.
-model: haiku
+model: sonnet
 effort: low
 disallowedTools: Edit, NotebookEdit
 ---
