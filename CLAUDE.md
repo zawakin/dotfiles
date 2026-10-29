@@ -4,10 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Workflow
 
-- **Commit directly to `main` and push.** This repo does NOT use pull requests.
-  Skip `gw new` / feature branches / `gh pr create` — just stage, commit, and
-  `git push` to `origin/main`. This overrides the global git-workflow skill's
-  PR-based flow.
+- **Trunk flow: commit on `main` and push, no PRs.** Declared as `gw.flow = trunk`
+  (`git/.gitconfig` includes `~/.gitconfig.trunk` for `~/dotfiles/`), so `gw status`
+  shows it.
 
 ## Development Commands
 
@@ -103,12 +102,17 @@ This is a personal dotfiles repository that manages development environment conf
 ├── homebrew/
 │   └── .Brewfile               # Package definitions (stowed to ~/.Brewfile; `brew bundle --global`)
 ├── claude/
-│   └── .claude/skills/         # Claude Code skills (symlinked to ~/.claude/skills)
+│   └── .claude/
+│       ├── CLAUDE.md           # Global instructions (→ ~/.claude/CLAUDE.md)
+│       ├── agents/             # Subagent definitions: scout / worker / reviewer
+│       ├── hooks/              # Hook scripts; registered in ~/.claude/settings.json (untracked)
+│       └── skills/             # Symlinks into each skill's own repo (make claude-skills)
 ├── agents/
 │   └── .agents/skills/         # Shared agent skills (symlinked to ~/.agents/skills)
 ├── osx-config.sh              # macOS system configuration
 ├── .gitconfig                 # Git configuration
 ├── .gitconfig.kw              # Knowledge-work specific Git config
+├── .gitconfig.trunk           # gw.flow = trunk, included for trunk-flow repos
 ├── .vimrc                     # Vim configuration
 ├── tmux/
 │   ├── .tmux.conf

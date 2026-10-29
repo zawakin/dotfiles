@@ -5,6 +5,10 @@
 [includeIf "gitdir:~/go/src/github.com/knowledge-work/"]
   path = ~/.gitconfig.kw
 
+# Repos that commit on main and push directly (gw.flow = trunk; default is pr)
+[includeIf "gitdir:~/dotfiles/"]
+  path = ~/.gitconfig.trunk
+
 [color] ui = auto
 [alias]
   co = checkout

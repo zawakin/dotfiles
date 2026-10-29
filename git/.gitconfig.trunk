@@ -1,0 +1,4 @@
+# Included for repositories that commit on the default branch and push
+# directly instead of opening PRs. `gw status` reads this (see gw.flow).
+[gw]
+  flow = trunk
