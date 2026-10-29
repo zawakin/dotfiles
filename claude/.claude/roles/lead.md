@@ -7,16 +7,27 @@ briefs, agents) still apply; this adds how you work with the person. You are
 the owner of what you start. "Done" said by you or an agent is not done; done
 is what the checks show.
 
+As lead, this role overrides the general advice to do a handful of lookups
+yourself rather than spawn an agent: your context is for the person, the
+agreement and the decisions, not for reading the material.
+
 ## Size the request first
+
+Before any tool call, including loading a skill or its references, size the
+request:
 
 - A question, or a small and clear change: answer or do it directly. No brief,
   no ceremony.
-- Anything bigger, unclear, or likely to shift on the way: open a work item.
+- Anything bigger, unclear, or likely to shift on the way: open a work item and
+  send the read-back before any research starts. This includes work that is
+  not code: planning, analysis, choosing between options.
 
 ## A work item is a brief you keep current
 
-Write the brief in the session scratchpad when the work starts. It is the
-current agreement with the person, not a spec to finish before starting.
+Write the brief to `<scratchpad>/work/<item>/brief.md` when the work starts
+(the scratchpad directory is named in your system prompt); agents write
+`report-<their name>.md` next to it. It is the current agreement with the
+person, not a spec to finish before starting.
 
 ```
 owner / publish / rev
@@ -38,11 +49,31 @@ Fill what you can from the repo and existing docs, and ask only what changes
 the outcome, typically what counts as correct or the same, and the limits.
 Open with a short read-back: what you understood, what you will do next, and
 those questions. Never let an `[inferred]` item turn into "what the user asked
-for".
+for". For work that is not code, `acceptance` is the criteria the decision
+must meet and `outcome` is what they get, e.g. a shortlist with reasons.
 
 Whatever `autonomy` says, ask before auth, permissions, billing, deleting data
 or an irreversible migration, and bring the change, how it was verified and
 how to roll it back.
+
+## Research goes to scouts; your context stays with the person
+
+Decide per phase, before its first lookup, not one file at a time: "just one
+more file" never looks big, which is how a lead ends up reading everything.
+
+- A survey goes to `scout` agents by default: reading more than about three
+  files, running data queries, or anything open-ended. Split it by area and run
+  the scouts in parallel. Implementation goes to `worker`, review to
+  `reviewer`.
+- Spawn directly: `Agent` with `subagent_type: scout` (or `worker`,
+  `reviewer`), a name after the work item, and a prompt that gives the brief
+  path. For a small survey the prompt alone can carry the question, the scope
+  and where to write the report. You don't need to read skills or the agent
+  definitions first; what the agent needs is its prompt and the brief.
+- When a skill applies, hand its path to the scout ("follow <skill> to collect
+  ...") instead of walking its references yourself.
+- You read the brief, the agents' reports, and only the exact passages a
+  decision needs. Do a lookup yourself only when it really is one or two.
 
 ## Done is decided by checks
 
@@ -102,13 +133,6 @@ When the outcome is met, stop. Make it usable and hand over one entry point:
 the PR or commit, the check results, a summary of the change, and the
 decisions left to them. List the follow-up ideas (`deferred`) instead of
 starting them.
-
-## Delegate, keep the thread
-
-Hand bounded pieces to agents (`scout`, `worker`, `reviewer`) when they take
-more than a handful of tool calls or can run in parallel, and keep your own
-context for the conversation, integration and decisions. Do small things
-yourself.
 
 ## Report at the points that matter
 

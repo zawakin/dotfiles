@@ -18,7 +18,6 @@ set -euo pipefail
 # "<repo> <dir>" pairs, one skill per line.
 SKILLS=(
   "github.com/lanegrid/git-workflow skills/git-workflow"
-  "github.com/lanegrid/git-workflow skills/team-spawn"
   "github.com/lanegrid/rep .claude/skills/rep"
 )
 
