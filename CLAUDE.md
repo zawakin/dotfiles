@@ -70,6 +70,7 @@ This is a personal dotfiles repository that manages development environment conf
 - Git configuration with conditional includes for different organizations
 - Vim configuration with custom settings and plugin management
 - Fish shell with custom aliases and environment variables
+- `claude-lead` (fish function) - `claude` with `~/.claude/roles/lead.md` appended to the system prompt: the session leads the work (sizes requests, keeps a brief as the current agreement, brings goal/scope changes to you, delegates to agents). Plain `claude` stays an ordinary conversation. Resume through it too: after compaction the prompt is rebuilt from the launch flags
 - `tw` (fish function) - tmux workspaces with explicit verbs: `tw save` dumps the live session (windows, panes, `#{window_layout}`, pane commands) to `~/.config/tmux/workspaces/<session>.conf` and diffs before overwriting; `tw up <name>` validates then builds it with pane commands typed but not executed (`--run` executes); `tw attach` only attaches. Files are gitignored (private repo paths); `dotfiles.conf` is the committed example
 - SSH configuration with host-specific settings
 
@@ -109,6 +110,7 @@ This is a personal dotfiles repository that manages development environment conf
 │       ├── CLAUDE.md           # Global instructions (→ ~/.claude/CLAUDE.md)
 │       ├── agents/             # Subagent definitions: scout / worker / reviewer
 │       ├── hooks/              # Hook scripts; registered through claude-settings.json
+│       ├── roles/              # Session roles appended at launch (lead.md ← claude-lead)
 │       └── skills/             # Symlinks into each skill's own repo (make claude-skills)
 ├── agents/
 │   └── .agents/skills/         # Shared agent skills (symlinked to ~/.agents/skills)
