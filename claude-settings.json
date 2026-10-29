@@ -1,0 +1,49 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1"
+  },
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "model": "opus",
+  "effortLevel": "high",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-fable-5-1": {
+      "effortLevel": "high"
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(gh pr merge *)",
+            "command": "$HOME/.claude/hooks/allow-own-pr-merge.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true
+  },
+  "feedbackDrafts": "off",
+  "tui": "fullscreen",
+  "autoMemoryEnabled": false,
+  "editorMode": "normal",
+  "verbose": true,
+  "preferredNotifChannel": "notifications_disabled",
+  "idleCompaction": false,
+  "switchModelsOnFlag": false,
+  "fileCheckpointingEnabled": false,
+  "teammateMode": "tmux",
+  "agentPushNotifEnabled": true
+}

@@ -57,10 +57,17 @@ restow-all: ## Relink all packages (useful after updates)
 
 # Packages with extra requirements or post-steps.
 stow-claude stow-agents: claude-skills
+stow-claude: claude-settings
 
 claude-skills: ## Symlink Claude skills from their ghq-managed repos
 	@echo "Linking Claude skills from ghq repositories..."
 	@./scripts/link-claude-skills.sh
+
+claude-settings: ## Merge claude-settings.json into ~/.claude/settings.json (writes only what differs)
+	@./scripts/claude-settings.sh
+
+claude-settings-check: ## Show drift between claude-settings.json and ~/.claude/settings.json (no changes made)
+	@./scripts/claude-settings.sh check
 
 vim-plug: stow-vim ## Install vim-plug (skipped when vim is missing)
 	@if command -v vim >/dev/null 2>&1; then \
@@ -144,6 +151,7 @@ claude-workspace-cleanup: ## Clean up Claude workspace temporary files
 	@find $(HOME) -name ".claude_workspace*" -type f -delete 2>/dev/null || true
 	@find $(HOME) -name "claude_workspace*" -type f -delete 2>/dev/null || true
 
-.PHONY: all help osx-config osx-check stow-all unstow-all restow-all claude-skills vim-plug fish-shell iterm2 \
+.PHONY: all help osx-config osx-check stow-all unstow-all restow-all claude-skills claude-settings \
+        claude-settings-check vim-plug fish-shell iterm2 \
         $(PACKAGES) $(STOW_TARGETS) \
         mise-install homebrew brew-dump brew-check clean claude-workspace-cleanup

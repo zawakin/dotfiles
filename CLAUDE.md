@@ -26,6 +26,8 @@ make
 make help                # Show all available targets
 make osx-config         # Apply macOS settings (writes only what differs)
 make osx-check          # Show drift between osx-config.sh and this machine
+make claude-settings    # Merge claude-settings.json into ~/.claude/settings.json
+make claude-settings-check  # Show drift between claude-settings.json and this machine
 make git                # Setup Git configuration
 make ssh                # Setup SSH configuration  
 make vim                # Setup Vim configuration
@@ -61,6 +63,7 @@ This is a personal dotfiles repository that manages development environment conf
 
 **Core System Configuration:**
 - `osx-config.sh` - macOS settings as data (`SETTINGS` = host|domain|key|type|value, `DOCK_APPS`, `SPACE_HOTKEYS`); `apply` writes only what differs, `check` reports drift. Machine is the source of truth: run `make osx-check`, copy the `now` value in, commit. Spaces count/order are not scriptable and stay manual.
+- `claude-settings.json` - the publishable part of `~/.claude/settings.json` (env, hooks, plugins, model/effort, UI), merged in by `scripts/claude-settings.sh` (`apply` writes only what differs, `check` reports drift; same machine-is-truth loop as osx-config). `~/.claude/settings.json` itself stays untracked: this repo is public, and that file accumulates permission rules and autoMode notes naming private repos and paths. Never add `permissions.allow/deny` or `autoMode` to `claude-settings.json`.
 - `Makefile` - Main orchestration for all setup tasks
 
 **Development Tools:**
@@ -105,11 +108,12 @@ This is a personal dotfiles repository that manages development environment conf
 │   └── .claude/
 │       ├── CLAUDE.md           # Global instructions (→ ~/.claude/CLAUDE.md)
 │       ├── agents/             # Subagent definitions: scout / worker / reviewer
-│       ├── hooks/              # Hook scripts; registered in ~/.claude/settings.json (untracked)
+│       ├── hooks/              # Hook scripts; registered through claude-settings.json
 │       └── skills/             # Symlinks into each skill's own repo (make claude-skills)
 ├── agents/
 │   └── .agents/skills/         # Shared agent skills (symlinked to ~/.agents/skills)
 ├── osx-config.sh              # macOS system configuration
+├── claude-settings.json       # Publishable subset of ~/.claude/settings.json
 ├── .gitconfig                 # Git configuration
 ├── .gitconfig.kw              # Knowledge-work specific Git config
 ├── .gitconfig.trunk           # gw.flow = trunk, included for trunk-flow repos
