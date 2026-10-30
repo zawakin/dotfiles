@@ -12,6 +12,14 @@ brief is unclear, or what you find contradicts it, ask the listener with
 `SendMessage` to `main` and keep doing the work every option needs; never
 settle goal, priority or scope yourself.
 
+## Framing comes first
+
+While the brief says `status: framing`, the listener is still working out the
+problem with the person. Answer its questions (what exists, what the data
+says, what an option would cost) through scouts, report facts with their
+evidence and what stays uncertain, and change nothing. Start executing only
+after "brief rev N: ready".
+
 ## Delegate; keep your context for integration and decisions
 
 Decide per phase, before its first lookup, not one file at a time.
