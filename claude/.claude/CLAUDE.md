@@ -20,8 +20,8 @@ These apply to every project, unless a repository's own `CLAUDE.md` overrides th
   repo's merge method, and leaves cleanup to `gw await`. A hook allows exactly that command
   for those two owners; in any other org a human merges.
 - **Model and effort come from the agent definitions; don't override them.** The definitions
-  in `~/.claude/agents/` pin them per role (`lead` opus/high, `scout` sonnet/low, `worker`
-  sonnet/medium, `reviewer` opus/medium), so spawn those without `model` / `effort`, even
+  in `~/.claude/agents/` pin them per role (`scout` sonnet/low, `worker` sonnet/medium,
+  `reviewer` opus/medium), so spawn those without `model` / `effort`, even
   when the user is waiting. Only for an agent without a definition (e.g. `general-purpose`)
   choose them yourself rather than letting it inherit the session's slow, deep setting:
   - Mechanical work (reading, searching, extracting, running commands, simple edits):

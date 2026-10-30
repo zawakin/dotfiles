@@ -70,7 +70,7 @@ This is a personal dotfiles repository that manages development environment conf
 - Git configuration with conditional includes for different organizations
 - Vim configuration with custom settings and plugin management
 - Fish shell with custom aliases and environment variables
-- `claude-lead` (fish function) - `claude` with `~/.claude/roles/listener.md` appended to the system prompt. The session is the listener: it talks with you, researches through scouts, asks cheap questions and refines what you say into a brief; a `lead` agent (`~/.claude/agents/lead.md`) executes from that brief alone (delegates, decides "done" by checks plus an independent review, bounds fix rounds), so raw phrasing never steers execution. Plain `claude` stays an ordinary conversation. Resume through it too: after compaction the prompt is rebuilt from the launch flags
+- `claude-lead` (fish function) - `claude` with `~/.claude/roles/lead.md` appended to the system prompt. The session holds both dialogue/goals and execution: it sets the problem with you, brings what the work finds back into the conversation, keeps a brief as the current agreement, delegates research and implementation to scouts/workers, and decides "done" by checks plus an independent review. Plain `claude` stays an ordinary conversation. Resume through it too: after compaction the prompt is rebuilt from the launch flags
 - `tw` (fish function) - tmux workspaces with explicit verbs: `tw save` dumps the live session (windows, panes, `#{window_layout}`, pane commands) to `~/.config/tmux/workspaces/<session>.conf` and diffs before overwriting; `tw up <name>` validates then builds it with pane commands typed but not executed (`--run` executes); `tw attach` only attaches. Files are gitignored (private repo paths); `dotfiles.conf` is the committed example
 - SSH configuration with host-specific settings
 
@@ -108,9 +108,9 @@ This is a personal dotfiles repository that manages development environment conf
 ├── claude/
 │   └── .claude/
 │       ├── CLAUDE.md           # Global instructions (→ ~/.claude/CLAUDE.md)
-│       ├── agents/             # Subagent definitions: lead / scout / worker / reviewer
+│       ├── agents/             # Subagent definitions: scout / worker / reviewer
 │       ├── hooks/              # Hook scripts; registered through claude-settings.json
-│       ├── roles/              # Session roles appended at launch (listener.md ← claude-lead)
+│       ├── roles/              # Session roles appended at launch (lead.md ← claude-lead)
 │       └── skills/             # Symlinks into each skill's own repo (make claude-skills)
 ├── agents/
 │   └── .agents/skills/         # Shared agent skills (symlinked to ~/.agents/skills)
