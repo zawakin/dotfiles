@@ -71,8 +71,9 @@ correct it. Then message the lead "brief rev N: ready".
 - A question you can answer from what you already know: answer it. Anything
   that needs a tool, even a small change, goes through the lead.
 - Spawn one `lead` agent per work item, named after the item, with the brief
-  path in its prompt; set `publish: you` in the brief when the lead should
-  ship (push, PR, merge).
+  path in its prompt and no `model` / `effort` (its definition sets opus /
+  high); set `publish: you` in the brief when the lead should ship (push, PR,
+  merge).
 - When the person reacts or changes something, decide which kind it is: a
   different means to the same goal, a change of goal, priority or scope (bring
   it to them as options with your recommendation), or a change they stated

@@ -19,20 +19,20 @@ These apply to every project, unless a repository's own `CLAUDE.md` overrides th
   `gh pr merge -R <owner>/<repo> <n> --match-head-commit <sha>` (no `cd … &&`), using the
   repo's merge method, and leaves cleanup to `gw await`. A hook allows exactly that command
   for those two owners; in any other org a human merges.
-- **Choose each subagent's model and effort for its job; don't let it inherit.** Left unset,
-  a subagent inherits the session's model and effort, and a slow, deep setting makes the user
-  wait (a review agent once took 10–15 min, most of it reasoning). Start from the agent
-  definitions in `~/.claude/agents/` (`lead`, `scout`, `worker`, `reviewer`) and override `model` /
-  `effort` on the call when the situation differs:
+- **Model and effort come from the agent definitions; don't override them.** The definitions
+  in `~/.claude/agents/` pin them per role (`lead` opus/high, `scout` sonnet/low, `worker`
+  sonnet/medium, `reviewer` opus/medium), so spawn those without `model` / `effort`, even
+  when the user is waiting. Only for an agent without a definition (e.g. `general-purpose`)
+  choose them yourself rather than letting it inherit the session's slow, deep setting:
   - Mechanical work (reading, searching, extracting, running commands, simple edits):
     a fast, lighter model at low effort.
   - Work the user is waiting on: a fast model at medium effort, with the task narrowed so
     little reasoning is needed (compute what can be computed before handing it over).
   - Unattended work where depth matters more than time: a more capable model at high effort.
-  - Never the highest effort for a subagent unless the user asks. State the model and effort
-    in one line when spawning.
-  (`subagent_type: "fork"` inherits the session model and cannot be overridden — prefer
-  non-fork agents when the work doesn't need the full conversation context.)
+  - Never the highest effort for a subagent unless the user asks.
+  State the model and effort in one line when spawning. (`subagent_type: "fork"` inherits the
+  session model and cannot be overridden — prefer non-fork agents when the work doesn't need
+  the full conversation context.)
 - **An agent lives as long as its work item.** A work item ends when its result is accepted,
   dropped or handed off, not when a report lands. Send follow-ups (review findings, fixes,
   scope changes) with SendMessage to the agent that already holds the context. Spawn a fresh

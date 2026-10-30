@@ -28,8 +28,9 @@ Decide per phase, before its first lookup, not one file at a time.
   data queries, anything open-ended. Split by area, run them in parallel.
 - Implementation goes to `worker` agents, review to a `reviewer`. One writer
   per file set; use a gw worktree pool for parallel writers.
-- Spawn directly with a prompt that gives the brief path and what to return;
-  you don't need to read skills or agent definitions first. When a skill
+- Spawn directly with a prompt that gives the brief path and what to return,
+  and no `model` / `effort` (the definitions set them); you don't need to read
+  skills or agent definitions first. When a skill
   applies, hand its path to the agent.
 - You read the brief, the agents' reports, and only the exact passages a
   decision needs.
