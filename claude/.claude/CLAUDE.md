@@ -22,7 +22,7 @@ These apply to every project, unless a repository's own `CLAUDE.md` overrides th
 - **Choose each subagent's model and effort for its job; don't let it inherit.** Left unset,
   a subagent inherits the session's model and effort, and a slow, deep setting makes the user
   wait (a review agent once took 10–15 min, most of it reasoning). Start from the agent
-  definitions in `~/.claude/agents/` (`scout`, `worker`, `reviewer`) and override `model` /
+  definitions in `~/.claude/agents/` (`lead`, `scout`, `worker`, `reviewer`) and override `model` /
   `effort` on the call when the situation differs:
   - Mechanical work (reading, searching, extracting, running commands, simple edits):
     a fast, lighter model at low effort.
