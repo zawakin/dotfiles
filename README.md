@@ -169,6 +169,8 @@ dotfiles/
 │   └── .config/tmux/workspaces/   # `tw save` output, one file per session (gitignored)
 ├── claude/        # Claude Code skills package
 │   └── .claude/skills/
+├── codex/         # Codex package
+│   └── .codex/AGENTS.md  # symlink to claude/.claude/CLAUDE.md (shared global instructions)
 └── Makefile       # Main setup orchestration
 ```
 

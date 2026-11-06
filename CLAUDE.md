@@ -107,13 +107,15 @@ This is a personal dotfiles repository that manages development environment conf
 │   └── .Brewfile               # Package definitions (stowed to ~/.Brewfile; `brew bundle --global`)
 ├── claude/
 │   └── .claude/
-│       ├── CLAUDE.md           # Global instructions (→ ~/.claude/CLAUDE.md)
+│       ├── CLAUDE.md           # Global instructions for every agent (→ ~/.claude/CLAUDE.md, ~/.codex/AGENTS.md)
 │       ├── agents/             # Subagent definitions: scout / worker / reviewer
 │       ├── hooks/              # Hook scripts; registered through claude-settings.json
 │       ├── roles/              # Session roles appended at launch (lead.md ← claude-lead)
 │       └── skills/             # Symlinks into each skill's own repo (make claude-skills)
 ├── agents/
 │   └── .agents/skills/         # Shared agent skills (symlinked to ~/.agents/skills)
+├── codex/
+│   └── .codex/AGENTS.md        # Symlink to claude/.claude/CLAUDE.md: one source for both tools
 ├── osx-config.sh              # macOS system configuration
 ├── claude-settings.json       # Publishable subset of ~/.claude/settings.json
 ├── .gitconfig                 # Git configuration

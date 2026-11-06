@@ -9,7 +9,7 @@ STOW_TARGET  := $(HOME)
 BREWFILE     := $(DOTFILES_DIR)/homebrew/.Brewfile
 
 # Every stow package: `stow-<name>` links it, `<name>` is a short alias.
-PACKAGES     := git ssh vim fish gh mise homebrew tmux claude agents
+PACKAGES     := git ssh vim fish gh mise homebrew tmux claude agents codex
 STOW_TARGETS := $(addprefix stow-,$(PACKAGES))
 
 .DEFAULT_GOAL := all
@@ -68,6 +68,13 @@ claude-settings: ## Merge claude-settings.json into ~/.claude/settings.json (wri
 
 claude-settings-check: ## Show drift between claude-settings.json and ~/.claude/settings.json (no changes made)
 	@./scripts/claude-settings.sh check
+
+# ~/.codex holds Codex's own state (auth.json, logs). Create it first so stow
+# links only AGENTS.md instead of folding the whole directory into this repo.
+stow-codex: codex-home
+
+codex-home:
+	@mkdir -p $(HOME)/.codex
 
 vim-plug: stow-vim ## Install vim-plug (skipped when vim is missing)
 	@if command -v vim >/dev/null 2>&1; then \
@@ -152,6 +159,6 @@ claude-workspace-cleanup: ## Clean up Claude workspace temporary files
 	@find $(HOME) -name "claude_workspace*" -type f -delete 2>/dev/null || true
 
 .PHONY: all help osx-config osx-check stow-all unstow-all restow-all claude-skills claude-settings \
-        claude-settings-check vim-plug fish-shell iterm2 \
+        claude-settings-check codex-home vim-plug fish-shell iterm2 \
         $(PACKAGES) $(STOW_TARGETS) \
         mise-install homebrew brew-dump brew-check clean claude-workspace-cleanup
