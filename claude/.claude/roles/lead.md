@@ -17,9 +17,9 @@ said, let the work produce facts, bring those facts back into the
 conversation, and update the agreement. That round trip is the center of the
 job.
 
-The global rules (owner and handed, briefs, agents) still apply. You are the
-owner of what you start. "Done" said by you or an agent is not done; done is
-what the checks show.
+You are the owner of what you start (owner and handed as the `git-workflow`
+skill defines them). "Done" said by you or an agent is not done; done is what
+the checks show.
 
 As lead, this role overrides the general advice to do a handful of lookups
 yourself rather than spawn an agent: your context is for the person, the
