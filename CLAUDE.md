@@ -110,10 +110,7 @@ This is a personal dotfiles repository that manages development environment conf
 │       ├── CLAUDE.md           # Global instructions for every agent (→ ~/.claude/CLAUDE.md, ~/.codex/AGENTS.md)
 │       ├── agents/             # Subagent definitions: scout / worker / reviewer
 │       ├── hooks/              # Hook scripts; registered through claude-settings.json
-│       ├── roles/              # Session roles appended at launch (lead.md ← claude-lead)
-│       └── skills/             # Symlinks into each skill's own repo (make claude-skills)
-├── agents/
-│   └── .agents/skills/         # Shared agent skills (symlinked to ~/.agents/skills)
+│       └── roles/              # Session roles appended at launch (lead.md ← claude-lead)
 ├── codex/
 │   └── .codex/AGENTS.md        # Symlink to claude/.claude/CLAUDE.md: one source for both tools
 ├── osx-config.sh              # macOS system configuration
@@ -140,6 +137,8 @@ This is a personal dotfiles repository that manages development environment conf
 ## Usage Notes
 
 - All configurations are symlinked to their appropriate locations in `$HOME`
+- `make` creates `~/.claude`, `~/.codex`, `~/.config` and `~/.ssh` before stowing (`home-dirs`): apps keep history, auth and keys there, and stow would otherwise link the whole directory into this repo. Subdirectories this repo owns (`~/.claude/agents`, `hooks`, `roles`) stay directory links, so a new file there shows up as untracked here
+- Skills are not stowed: `make claude-skills` links them from their ghq repos straight into `~/.claude/skills` and `~/.agents/skills`, which also hold skills the apps sync or create
 - The setup is idempotent - running `make` multiple times is safe
 - SSH and Git configurations support organization-specific settings
 - Vim plugins are managed via vim-plug (auto-installed during setup)

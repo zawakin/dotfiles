@@ -9,7 +9,7 @@ STOW_TARGET  := $(HOME)
 BREWFILE     := $(DOTFILES_DIR)/homebrew/.Brewfile
 
 # Every stow package: `stow-<name>` links it, `<name>` is a short alias.
-PACKAGES     := git ssh vim fish gh mise homebrew tmux claude agents codex
+PACKAGES     := git ssh vim fish gh mise homebrew tmux claude codex
 STOW_TARGETS := $(addprefix stow-,$(PACKAGES))
 
 .DEFAULT_GOAL := all
@@ -43,7 +43,7 @@ stow-all: $(STOW_TARGETS) vim-plug fish-shell iterm2 ## Link all packages and ru
 
 # Static pattern rule (not `stow-%:`): phony targets skip implicit rule search,
 # and this also rejects package names that are not in PACKAGES.
-$(STOW_TARGETS): stow-%:
+$(STOW_TARGETS): stow-%: home-dirs
 	@echo "Stowing $*..."
 	@stow -v -t $(STOW_TARGET) $*
 
@@ -51,15 +51,21 @@ unstow-all: ## Unlink all packages
 	@echo "Removing all stow configurations..."
 	@stow -v -t $(STOW_TARGET) -D $(PACKAGES) 2>/dev/null || true
 
-restow-all: ## Relink all packages (useful after updates)
+restow-all: home-dirs ## Relink all packages (useful after updates)
 	@echo "Restowing all configurations..."
 	@stow -v -t $(STOW_TARGET) -R $(PACKAGES)
 
-# Packages with extra requirements or post-steps.
-stow-claude stow-agents: claude-skills
-stow-claude: claude-settings
+# Apps keep their own state in these directories: history, auth, keys. stow
+# links a whole directory when it does not exist yet, which would put that
+# state inside this repo; creating them first makes stow link only our files.
+home-dirs:
+	@mkdir -p $(STOW_TARGET)/.claude $(STOW_TARGET)/.codex $(STOW_TARGET)/.config
+	@mkdir -p -m 700 $(STOW_TARGET)/.ssh
 
-claude-skills: ## Symlink Claude skills from their ghq-managed repos
+# Packages with extra requirements or post-steps.
+stow-claude: claude-skills claude-settings
+
+claude-skills: ## Symlink skills from their ghq-managed repos into ~/.claude/skills and ~/.agents/skills
 	@echo "Linking Claude skills from ghq repositories..."
 	@./scripts/link-claude-skills.sh
 
@@ -68,13 +74,6 @@ claude-settings: ## Merge claude-settings.json into ~/.claude/settings.json (wri
 
 claude-settings-check: ## Show drift between claude-settings.json and ~/.claude/settings.json (no changes made)
 	@./scripts/claude-settings.sh check
-
-# ~/.codex holds Codex's own state (auth.json, logs). Create it first so stow
-# links only AGENTS.md instead of folding the whole directory into this repo.
-stow-codex: codex-home
-
-codex-home:
-	@mkdir -p $(HOME)/.codex
 
 vim-plug: stow-vim ## Install vim-plug (skipped when vim is missing)
 	@if command -v vim >/dev/null 2>&1; then \
@@ -159,6 +158,6 @@ claude-workspace-cleanup: ## Clean up Claude workspace temporary files
 	@find $(HOME) -name "claude_workspace*" -type f -delete 2>/dev/null || true
 
 .PHONY: all help osx-config osx-check stow-all unstow-all restow-all claude-skills claude-settings \
-        claude-settings-check codex-home vim-plug fish-shell iterm2 \
+        claude-settings-check home-dirs vim-plug fish-shell iterm2 \
         $(PACKAGES) $(STOW_TARGETS) \
         mise-install homebrew brew-dump brew-check clean claude-workspace-cleanup

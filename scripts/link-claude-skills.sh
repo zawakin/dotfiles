@@ -1,13 +1,14 @@
 #!/bin/bash
-# Symlink user-scoped agent skills from their own ghq-managed repos into dotfiles.
+# Symlink user-scoped agent skills from their own ghq-managed repos into $HOME.
 #
 # Each skill ships inside its source repo as a directory (e.g. skills/<skill>/
 # or .claude/skills/<skill>/). This resolves <repo> to a local path via ghq
 # (cloning if missing) and creates symlinks for both Claude Code and agents at:
-#   claude/.claude/skills/<skill> -> that directory
-#   agents/.agents/skills/<skill> -> that directory
-# The symlinks are git-ignored and regenerated per machine, so dotfiles stays
-# portable while the skills stay in sync with their upstream repos.
+#   ~/.claude/skills/<skill> -> that directory
+#   ~/.agents/skills/<skill> -> that directory
+# The links go straight into $HOME, not through a stow package: those
+# directories also hold skills the apps sync or create, which must not land in
+# this repo. The links are regenerated per machine (ghq paths differ).
 #
 # A single repo can ship multiple skills: add another "<repo> <dir>" pair below.
 # <dir> is the skill directory inside the repo; its basename is the skill name.
@@ -21,10 +22,9 @@ SKILLS=(
   "github.com/lanegrid/rep .claude/skills/rep"
 )
 
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DEST_DIRS=(
-  "$DOTFILES_DIR/claude/.claude/skills"
-  "$DOTFILES_DIR/agents/.agents/skills"
+  "$HOME/.claude/skills"
+  "$HOME/.agents/skills"
 )
 mkdir -p "${DEST_DIRS[@]}"
 
@@ -47,8 +47,12 @@ for entry in "${SKILLS[@]}"; do
 
   for dest_dir in "${DEST_DIRS[@]}"; do
     dst="$dest_dir/$skill"
-    rm -rf "$dst"
+    # Replace only our own links; never delete a real skill directory.
+    if [[ -e "$dst" && ! -L "$dst" ]]; then
+      echo "  ! not a symlink, left alone: $dst" >&2
+      continue
+    fi
     ln -sfn "$src" "$dst"
-    echo "  ${dst#"$DOTFILES_DIR/"} -> $src"
+    echo "  ${dst/#"$HOME"/~} -> $src"
   done
 done
