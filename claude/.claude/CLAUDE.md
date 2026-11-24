@@ -7,3 +7,13 @@
 - **Keep personal identifiers out of outbound requests.** No personal name, personal email,
   account handle, or private repository name/URL in User-Agents, URLs, or payloads. If a
   service asks for a contact, use only the public contact the repository defines.
+
+## Which model for what (owner, 2026-11-25)
+
+When more than one model is available, route work by these strengths:
+
+- **Claude**: closed problems, parallel development with subagents, generating visualization
+  code in volume.
+- **GPT**: research, and robust, careful argument.
+- **Gemini**: image generation; takes sound and video as input; fast at token-heavy passes
+  that survey a whole.
